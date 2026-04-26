@@ -193,69 +193,71 @@ cd TEMPLATE/scripts && chmod +x install.sh && ./install.sh
 
 安装后，在新项目中直接说 "使用 obsidian-wiki" 即可激活全套 Wiki 功能。
 
-## 初始化 Wiki
+---
 
-当用户请求初始化 Wiki（如 "obsidian-wiki init target-path"）时：
+## 执行指令
 
-### Step 1: 验证目标路径
+### 当用户请求初始化 Wiki
 
-确认用户提供的目标路径有效：
-- 检查路径是否为空或不存在
-- 验证有写入权限
+**检测模式：**
+- 用户说："初始化 wiki"、"创建知识库"、"obsidian-wiki init <path>"
+- 触发关键词：init、初始化、创建
 
-### Step 2: 复制模板文件
+**执行步骤：**
 
-将 `TEMPLATE/` 目录复制到目标路径：
-```bash
-cp -r TEMPLATE/* {target-path}/
-```
+1. **提取目标路径**
+   - 从用户输入中提取目标路径（如 "obsidian-wiki init my-wiki" → "my-wiki"）
+   - 如果未提供路径，询问用户："请提供目标路径（如：obsidian-wiki init my-wiki）"
 
-### Step 3: 安装项目 Skills
+2. **验证路径**
+   ```bash
+   # 检查路径是否存在
+   if [ -d "{target-path}" ]; then
+       echo "⚠️ 警告：目标路径已存在"
+       echo "是否覆盖？(y/n)"
+       # 等待用户确认
+   fi
+   ```
 
-在目标路径创建 `.claude/skills/` 目录并复制 skills：
+3. **复制模板文件**
+   ```bash
+   cp -r TEMPLATE/* {target-path}/
+   ```
 
-```bash
-# 创建 skills 目录
-mkdir -p {target-path}/.claude/skills
+4. **创建并安装 skills**
+   ```bash
+   # 创建 skills 目录
+   mkdir -p {target-path}/.claude/skills
+   
+   # 复制主 skill
+   cp SKILL.md {target-path}/.claude/skills/obsidian-wiki.md
+   
+   # 复制子 skills
+   mkdir -p {target-path}/.claude/skills/docs-ingest
+   cp docs-ingest/SKILL.md {target-path}/.claude/skills/docs-ingest/SKILL.md
+   
+   mkdir -p {target-path}/.claude/skills/wiki-query
+   cp wiki-query/SKILL.md {target-path}/.claude/skills/wiki-query/SKILL.md
+   
+   mkdir -p {target-path}/.claude/skills/wiki-lint
+   cp wiki-lint/SKILL.md {target-path}/.claude/skills/wiki-lint/SKILL.md
+   ```
 
-# 复制主 skill
-cp SKILL.md {target-path}/.claude/skills/obsidian-wiki.md
-
-# 复制子 skills
-mkdir -p {target-path}/.claude/skills/docs-ingest
-cp docs-ingest/SKILL.md {target-path}/.claude/skills/docs-ingest/SKILL.md
-
-mkdir -p {target-path}/.claude/skills/wiki-query
-cp wiki-query/SKILL.md {target-path}/.claude/skills/wiki-query/SKILL.md
-
-mkdir -p {target-path}/.claude/skills/wiki-lint
-cp wiki-lint/SKILL.md {target-path}/.claude/skills/wiki-lint/SKILL.md
-```
-
-### Step 4: 完成提示
-
-告知用户下一步操作：
-```
-✅ Wiki 初始化完成！
-
-已创建：
-  - {target-path}/wiki/        - Wiki 知识库
-  - {target-path}/archive/     - 归档目录
-  - {target-path}/scripts/    - 工具脚本
-  - {target-path}/.claude/skills/ - 项目 skills
-
-下一步：
-  1. 重启 Claude Code
-  2. 在新项目中说 "使用 obsidian-wiki"
-  3. 开始添加知识
-```
-
-### 错误处理
-
-如果目标路径已存在文件：
-- 警告用户
-- 询问是否覆盖
-- 提供取消选项
+5. **显示完成信息**
+   ```
+   ✅ Wiki 初始化完成！
+   
+   已创建：
+     - {target-path}/wiki/        - Wiki 知识库
+     - {target-path}/archive/     - 归档目录
+     - {target-path}/scripts/    - 工具脚本
+     - {target-path}/.claude/skills/ - 项目 skills
+   
+   下一步：
+     1. 重启 Claude Code
+     2. 在新项目中说 "使用 obsidian-wiki"
+     3. 开始添加知识
+   ```
 
 ---
 
