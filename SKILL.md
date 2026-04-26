@@ -266,7 +266,15 @@ cd TEMPLATE/scripts && chmod +x install.sh && ./install.sh
      - `plugins/dataview/` — 数据查询和索引
      - `plugins/obsidian-branding/` — 界面美化
 
-4. **创建并安装 skills**
+4. **创建必需目录**
+   ```bash
+   # 创建三层架构必需目录
+   mkdir -p {target-path}/raw
+   mkdir -p {target-path}/archive/assets
+   mkdir -p {target-path}/archive/sources
+   ```
+
+5. **创建并安装 skills**
    ```bash
    # 创建 skills 目录
    mkdir -p {target-path}/.claude/skills
@@ -288,15 +296,18 @@ cd TEMPLATE/scripts && chmod +x install.sh && ./install.sh
    cp inspool/SKILL.md {target-path}/.claude/skills/inspool/SKILL.md
    ```
 
-5. **显示完成信息**
+6. **显示完成信息**
    ```
    ✅ Wiki 初始化完成！
    
    已创建：
-     - {target-path}/wiki/        - Wiki 知识库
-     - {target-path}/archive/     - 归档目录
-     - {target-path}/scripts/    - 工具脚本
-     - {target-path}/.claude/skills/ - 项目 skills
+     - {target-path}/wiki/              - Wiki 知识库
+     - {target-path}/raw/               - 待处理源文件目录
+     - {target-path}/archive/           - 归档目录
+     - {target-path}/archive/assets/    - 多媒体素材（图片/音频/视频）
+     - {target-path}/archive/sources/   - 源文件归档
+     - {target-path}/scripts/           - 工具脚本
+     - {target-path}/.claude/skills/   - 项目 skills
    
    下一步：
      1. 重启 Claude Code
