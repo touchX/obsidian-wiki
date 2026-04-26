@@ -33,8 +33,11 @@ fi
 install_skill() {
     local src="$1"
     local dest="$2"
+    local dir
+    dir="$(dirname "$dest")"
+    [ -d "$dir" ] || mkdir -p "$dir"
     if cp "$src" "$dest" 2>/dev/null; then
-        echo "  ✓ $(basename $(dirname $src))/$(basename $src)"
+        echo "  ✓ $(basename "$dir")/$(basename "$src")"
     else
         echo "  ✗ 安装失败: $src"
         exit 1
@@ -42,6 +45,7 @@ install_skill() {
 }
 
 echo "[安装] obsidian-wiki skill..."
+mkdir -p "$PROJECT_DIR/.claude/skills"
 install_skill "../SKILL.md" "$PROJECT_DIR/.claude/skills/obsidian-wiki.md"
 
 echo "[安装] docs-ingest skill..."
