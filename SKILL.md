@@ -256,6 +256,15 @@ cd TEMPLATE/scripts && chmod +x install.sh && ./install.sh
    ```bash
    cp -r TEMPLATE/* {target-path}/
    ```
+   
+   这会复制：
+   - `wiki/` — Wiki 知识库结构
+   - `scripts/` — 工具脚本
+   - `.obsidian/` — Obsidian 配置（包含预配置插件）
+     - `plugins/calendar/` — 日历视图
+     - `plugins/claudian/` — Claude Code 集成
+     - `plugins/dataview/` — 数据查询和索引
+     - `plugins/obsidian-branding/` — 界面美化
 
 4. **创建并安装 skills**
    ```bash
