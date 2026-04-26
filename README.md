@@ -31,6 +31,17 @@ obsidian --version
 - 内置 Wiki 健康检查脚本
 - 预配置 Obsidian Vault 设置
 
+## 预配置插件
+
+TEMPLATE 包含以下预配置插件：
+
+| 插件 | 用途 |
+|------|------|
+| **dataview** | 数据查询和索引自动生成 — 自动维护 wiki/index.md |
+| **calendar** | 日历视图 — 按日期浏览 Wiki 操作日志 |
+| **claudian** | Claude Code 集成 — 与 Claude CLI 交互 |
+| **obsidian-branding** | 界面美化 — 统一视觉风格 |
+
 ## 目录结构
 
 ```

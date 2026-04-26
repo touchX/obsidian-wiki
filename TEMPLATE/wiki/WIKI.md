@@ -44,6 +44,31 @@ project-root/
     └── wiki-lint.sh       # 健康检查
 ```
 
+## Obsidian 插件
+
+本项目预配置以下插件（位于 `.obsidian/plugins/`）：
+
+| 插件 | 用途 | 说明 |
+|------|------|------|
+| **dataview** | 数据查询 | 用于 index.md 自动生成页面目录 |
+| **calendar** | 日历视图 | 按日期浏览 log.md 操作日志 |
+| **claudian** | Claude 集成 | 与 Claude Code CLI 交互 |
+| **obsidian-branding** | 视觉风格 | 自定义 Vault 主题和样式 |
+
+### Dataview 自动索引
+
+`wiki/index.md` 使用 Dataview 自动生成：
+
+```dataview
+TABLE without id
+  link(file.link, title) as "页面",
+  description as "描述",
+  type as "类型",
+  tags as "标签"
+FROM "wiki"
+SORT file.name asc
+```
+
 ## 页面格式
 
 ### Frontmatter（必须）

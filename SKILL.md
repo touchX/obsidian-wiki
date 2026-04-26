@@ -128,6 +128,35 @@ Wiki skills (编排层)
     └── tutorial/       # 教程
 ```
 
+## 预配置插件
+
+TEMPLATE 包含以下预配置插件（自动安装到 `.obsidian/plugins/`）：
+
+| 插件 | 用途 | 说明 |
+|------|------|------|
+| **dataview** | 数据查询和索引 | 自动维护 wiki/index.md，支持页面元数据查询 |
+| **calendar** | 日历视图 | 按日期浏览和创建笔记，常用于 log.md 操作日志 |
+| **claudian** | Claude Code 集成 | 与 Claude CLI 交互，支持 AI 辅助编辑 |
+| **obsidian-branding** | 界面美化 | 统一 Vault 视觉风格，自定义主题 |
+
+### Dataview 查询示例
+
+```dataview
+TABLE without id
+  link(file.link, title) as "页面",
+  type as "类型",
+  tags as "标签"
+FROM "wiki"
+WHERE file.cday = date(today)
+SORT file.cday desc
+```
+
+### Calendar 配置
+
+- **默认目录**: `wiki/`
+- **日期格式**: `YYYY-MM-DD`
+- **模板**: `templates/daily.md`
+
 ## Frontmatter 标准
 
 ```yaml
