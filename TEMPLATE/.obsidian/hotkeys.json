@@ -1,0 +1,24 @@
+# Obsidian Wiki 快捷方式配置
+
+## 核心快捷方式
+
+| 快捷键 | 命令 | 说明 |
+|--------|------|------|
+| `Ctrl+K` | Quick switcher | 快速切换文件 |
+| `Ctrl+O` | Open vault | 打开文件 |
+| `Ctrl+P` | Command palette | 命令面板 |
+| `Ctrl+Shift+F` | Search | 全局搜索 |
+
+## 自定义快捷方式
+
+```json
+{
+  "custom": {
+    "editor:insert-link": "Ctrl+[",
+    "editor:toggle-bold": "Ctrl+B"
+  }
+}
+```
+
+---
+*Obsidian Wiki 快捷方式*
