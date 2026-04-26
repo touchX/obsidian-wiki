@@ -58,6 +58,7 @@ ls ~/.obsidian/plugins/obsidian-skills/
 | Skill | 用途 | 触发时机 |
 |-------|------|----------|
 | `obsidian-wiki/init` | 初始化新 Wiki | 需要创建知识库时 |
+| `inspool` | 会话知识沉淀 | 完成复杂解答、发现新模式、会话结束时 |
 
 ## 分层架构
 
@@ -71,7 +72,8 @@ Wiki skills (编排层)
 ├── obsidian-wiki/init  → 初始化创建
 ├── docs-ingest          → 摄取流程
 ├── wiki-query           → 查询回答
-└── wiki-lint           → 健康检查
+├── wiki-lint           → 健康检查
+└── inspool             → 知识沉淀
 ```
 
 ## 使用流程
@@ -178,6 +180,7 @@ raw/ → [ingest] → wiki/ + archive/
 - `superpowers:docs-ingest` — 文档摄取流程
 - `superpowers:wiki-query` — Wiki 查询
 - `superpowers:wiki-lint` — Wiki 健康检查
+- `superpowers:inspool` — 会话知识沉淀
 
 ## 安装到项目
 
