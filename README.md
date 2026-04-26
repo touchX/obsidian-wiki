@@ -92,7 +92,7 @@ type: concept | entity | source | synthesis | guide
 tags: [tag1, tag2]
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-source: ../../archive/{category}/filename.md
+source: ../../archive/sources/filename.md
 ---
 ```
 

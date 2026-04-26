@@ -5,7 +5,7 @@ type: tutorial
 tags: [tutorial, learning, wiki]
 created: 2026-04-26
 updated: 2026-04-26
-source: ../../archive/tutorial/wiki-tutorial.md
+source: ../../archive/sources/wiki-tutorial.md
 ---
 
 # Wiki Tutorial

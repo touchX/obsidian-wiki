@@ -109,7 +109,8 @@ Wiki skills (编排层)
 {WIKI_PATH}/
 ├── .obsidian/          # Obsidian 配置
 ├── archive/            # 归档目录
-│   └── {category}/     # 按分类归档
+│   ├── assets/         # 图片、音频、视频等素材
+│   └── sources/        # 源文件归档（来自 raw/）
 ├── docs/               # 文档目录
 ├── raw/                 # 临时待处理文件
 ├── scripts/             # 工具脚本
@@ -137,7 +138,7 @@ type: concept | entity | source | synthesis | guide | tutorial | tips
 tags: [tag1, tag2]
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-source: ../../archive/{category}/filename.md
+source: ../../archive/sources/filename.md
 ---
 ```
 

@@ -5,7 +5,7 @@ type: synthesis
 tags: [architecture, design, wiki]
 created: 2026-04-26
 updated: 2026-04-26
-source: ../../archive/synthesis/wiki-architecture.md
+source: ../../archive/sources/wiki-architecture.md
 ---
 
 # Wiki Architecture Synthesis

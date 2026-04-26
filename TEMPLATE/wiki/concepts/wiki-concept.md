@@ -5,7 +5,7 @@ type: concept
 tags: [wiki, structure, template]
 created: 2026-04-26
 updated: 2026-04-26
-source: ../../archive/concepts/wiki-concept.md
+source: ../../archive/sources/wiki-concept.md
 ---
 
 # Wiki Concept

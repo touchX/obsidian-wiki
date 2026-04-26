@@ -5,7 +5,7 @@ type: tips
 tags: [tips, efficiency, wiki]
 created: 2026-04-26
 updated: 2026-04-26
-source: ../../archive/tips/tips-collection.md
+source: ../../archive/sources/tips-collection.md
 ---
 
 # Tips Collection

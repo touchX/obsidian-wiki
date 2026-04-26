@@ -5,7 +5,7 @@ type: guide
 tags: [guide, beginner, tutorial]
 created: 2026-04-26
 updated: 2026-04-26
-source: ../../archive/guides/quick-start.md
+source: ../../archive/sources/quick-start.md
 ---
 
 # Quick Start Guide

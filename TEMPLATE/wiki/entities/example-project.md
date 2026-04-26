@@ -5,7 +5,7 @@ type: entity
 tags: [example, project, demo]
 created: 2026-04-26
 updated: 2026-04-26
-source: ../../archive/entities/example-project.md
+source: ../../archive/sources/example-project.md
 ---
 
 # Example Project

@@ -38,6 +38,8 @@ project-root/
 │   ├── tips/              # 技巧总结
 │   └── tutorial/          # 教程
 ├── archive/               # 归档目录
+│   ├── assets/            # 图片、音频、视频等素材
+│   └── sources/           # 源文件归档（来自 raw/）
 └── scripts/               # 工具
     └── wiki-lint.sh       # 健康检查
 ```
@@ -54,7 +56,7 @@ type: concept | entity | source | synthesis | guide
 tags: [tag1, tag2]
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-source: ../../archive/{category}/filename.md
+source: ../../archive/sources/filename.md
 ---
 ```
 
