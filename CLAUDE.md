@@ -10,10 +10,11 @@ obsidian-wiki/
 ├── docs-ingest/           # Document ingestion
 ├── wiki-query/            # Wiki query
 ├── wiki-lint/             # Wiki health check
+├── inspool/               # Session knowledge capture
 └── TEMPLATE/              # Installation template
     ├── wiki/              # Wiki structure
     ├── scripts/           # Tools
-    └── .obsidian/         # Obsidian config
+    └── .obsidian/         # Obsidian config + plugins
 ```
 
 ## Dependencies

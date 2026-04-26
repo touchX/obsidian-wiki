@@ -58,13 +58,13 @@ obsidian backlinks file="some-note"
 
 ```yaml
 ---
-name: page-slug          # 必需
-description: 描述         # 必需
-type: category           # 必需
-tags: [tag1, tag2]       # 必需
-created: YYYY-MM-DD      # 必需
-updated: YYYY-MM-DD      # 必需
-source: ../../archive/.. # 建议添加
+name: page-slug                    # 必需
+description: 描述                   # 必需
+type: category                     # 必需
+tags: [tag1, tag2]                 # 必需
+created: YYYY-MM-DD                # 必需
+updated: YYYY-MM-DD                # 必需
+source: ../../archive/sources/..   # 建议添加
 ---
 ```
 
