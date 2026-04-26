@@ -31,19 +31,19 @@ if not exist "%PROJECT_DIR%\.claude\skills" (
 
 REM 安装 skills
 echo [安装] obsidian-wiki skill...
-copy "SKILL.md" "%PROJECT_DIR%\.claude\skills\obsidian-wiki.md" /Y
+copy "..\SKILL.md" "%PROJECT_DIR%\.claude\skills\obsidian-wiki.md" /Y
 
 echo [安装] docs-ingest skill...
 if not exist "%PROJECT_DIR%\.claude\skills\docs-ingest" mkdir "%PROJECT_DIR%\.claude\skills\docs-ingest"
-copy "docs-ingest\SKILL.md" "%PROJECT_DIR%\.claude\skills\docs-ingest\SKILL.md" /Y
+copy "..\docs-ingest\SKILL.md" "%PROJECT_DIR%\.claude\skills\docs-ingest\SKILL.md" /Y
 
 echo [安装] wiki-query skill...
 if not exist "%PROJECT_DIR%\.claude\skills\wiki-query" mkdir "%PROJECT_DIR%\.claude\skills\wiki-query"
-copy "wiki-query\SKILL.md" "%PROJECT_DIR%\.claude\skills\wiki-query\SKILL.md" /Y
+copy "..\wiki-query\SKILL.md" "%PROJECT_DIR%\.claude\skills\wiki-query\SKILL.md" /Y
 
 echo [安装] wiki-lint skill...
 if not exist "%PROJECT_DIR%\.claude\skills\wiki-lint" mkdir "%PROJECT_DIR%\.claude\skills\wiki-lint"
-copy "wiki-lint\SKILL.md" "%PROJECT_DIR%\.claude\skills\wiki-lint\SKILL.md" /Y
+copy "..\wiki-lint\SKILL.md" "%PROJECT_DIR%\.claude\skills\wiki-lint\SKILL.md" /Y
 
 echo.
 echo ========================================
