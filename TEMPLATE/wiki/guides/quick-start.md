@@ -50,7 +50,7 @@ cd wiki && ../scripts/wiki-lint.sh
 ## 下一步
 
 - [[wiki-concept]] — 了解 Wiki 概念
-- [[ingest-guide]] — 深入了解 Ingest 流程
+- [[wiki-tutorial]] — 深入学习 Wiki 使用
 
 ---
 *Wiki 快速开始*

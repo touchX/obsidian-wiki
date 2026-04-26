@@ -72,7 +72,7 @@ source: ../../archive/.. # 建议添加
 |------|------|------|
 | `name` | ✅ | 页面 slug |
 | `description` | ✅ | 一句话描述 |
-| `type` | ✅ | `concept`, `entity`, `source`, `synthesis`, `guide` |
+| `type` | ✅ | `concept`, `entity`, `source`, `synthesis`, `guide`, `tutorial`, `tips` |
 | `tags` | ✅ | 标签数组 |
 | `created` | ✅ | 创建日期 |
 | `updated` | ✅ | 更新日期 |

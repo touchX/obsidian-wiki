@@ -39,8 +39,8 @@ tags: [tag1, tag2]
 
 ## 关联页面
 
-- [[wiki-entity]] — 实体页面示例
-- [[wiki-guide]] — 指南页面示例
+- [[example-project]] — 实体页面示例
+- [[quick-start]] — 快速开始指南
 
 ---
 *概念页面是 Wiki 知识库的基础单元*

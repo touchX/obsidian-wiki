@@ -129,7 +129,7 @@ Wiki skills (编排层)
 ---
 name: {category}/{slug}
 description: 一句话描述
-type: concept | entity | source | synthesis | guide
+type: concept | entity | source | synthesis | guide | tutorial | tips
 tags: [tag1, tag2]
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
@@ -146,6 +146,18 @@ source: ../../archive/{category}/filename.md
 | `created` | ✅ | 创建日期 |
 | `updated` | ✅ | 更新日期 |
 | `source` | 建议 | 原始文件路径 |
+
+### type 可选值
+
+| 值 | 用途 |
+|------|------|
+| `concept` | 核心概念定义 |
+| `entity` | 实体文档记录 |
+| `source` | 来源摘要 |
+| `synthesis` | 综合分析 |
+| `guide` | 使用指南 |
+| `tutorial` | 教程 |
+| `tips` | 实用技巧 |
 
 ## 三层架构
 

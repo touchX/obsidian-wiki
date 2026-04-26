@@ -102,7 +102,7 @@ source: ../../archive/{category}/{filename}.md
 |------|------|------|
 | `name` | ✅ | 页面 slug，格式 `{category}/{slug}` |
 | `description` | ✅ | 一句话描述 |
-| `type` | ✅ | `concept`, `entity`, `source`, `synthesis`, `guide` |
+| `type` | ✅ | `concept`, `entity`, `source`, `synthesis`, `guide`, `tutorial`, `tips` |
 | `tags` | ✅ | 标签数组 |
 | `created` | ✅ | 创建日期 `YYYY-MM-DD` |
 | `updated` | ✅ | 更新日期 `YYYY-MM-DD` |

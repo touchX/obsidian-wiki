@@ -32,7 +32,7 @@ source: ../../archive/entities/example-project.md
 
 ## 关联页面
 
-- [[wiki-concept]] — 相关概念
+- [[wiki-concept]] — 核心概念
 - [[quick-start]] — 快速开始指南
 
 ---
