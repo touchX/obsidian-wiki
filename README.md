@@ -37,10 +37,18 @@ TEMPLATE 包含以下预配置插件：
 
 | 插件 | 用途 |
 |------|------|
-| **dataview** | 数据查询和索引自动生成 — 自动维护 wiki/index.md |
+| **dataview** | 数据查询和索引 — 自动维护 wiki/index.md |
 | **calendar** | 日历视图 — 按日期浏览 Wiki 操作日志 |
 | **claudian** | Claude Code 集成 — 与 Claude CLI 交互 |
 | **obsidian-branding** | 界面美化 — 统一视觉风格 |
+| **omnisearch** | 统一搜索 — 支持图片 OCR、音视频搜索 |
+| **obsidian-excalidraw-plugin** | Excalidraw 集成 — 画布绘图 |
+| **templater-obsidian** | 模板引擎 — 高级动态模板 |
+| **tag-wrangler** | 标签管理 — 批量重命名、合并标签 |
+| **file-explorer-note-count** | 目录计数 — 文件浏览器显示笔记数量 |
+| **obsidian-custom-attachment-location** | 附件管理 — 自定义附件存储位置 |
+| **obsidian-local-rest-api** | REST API — 本地 HTTP API 集成 |
+| **recent-files-obsidian** | 最近文件 — 快速访问最近打开的文件 |
 
 ## 目录结构
 

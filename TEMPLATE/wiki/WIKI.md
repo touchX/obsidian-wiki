@@ -54,6 +54,14 @@ project-root/
 | **calendar** | 日历视图 | 按日期浏览 log.md 操作日志 |
 | **claudian** | Claude 集成 | 与 Claude Code CLI 交互 |
 | **obsidian-branding** | 视觉风格 | 自定义 Vault 主题和样式 |
+| **omnisearch** | 统一搜索 | 图片 OCR、音视频搜索 |
+| **obsidian-excalidraw-plugin** | 画布绘图 | Excalidraw 集成 |
+| **templater-obsidian** | 模板引擎 | 高级动态模板 |
+| **tag-wrangler** | 标签管理 | 批量重命名、合并标签 |
+| **file-explorer-note-count** | 目录计数 | 文件浏览器显示笔记数量 |
+| **obsidian-custom-attachment-location** | 附件管理 | 自定义附件存储位置 |
+| **obsidian-local-rest-api** | REST API | 本地 HTTP API 集成 |
+| **recent-files-obsidian** | 最近文件 | 快速访问最近文件 |
 
 ### Dataview 自动索引
 
