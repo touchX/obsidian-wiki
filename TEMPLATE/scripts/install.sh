@@ -57,6 +57,9 @@ install_skill "../wiki-query/SKILL.md" "$PROJECT_DIR/.claude/skills/wiki-query/S
 echo "[安装] wiki-lint skill..."
 install_skill "../wiki-lint/SKILL.md" "$PROJECT_DIR/.claude/skills/wiki-lint/SKILL.md"
 
+echo "[安装] inspool skill..."
+install_skill "../inspool/SKILL.md" "$PROJECT_DIR/.claude/skills/inspool/SKILL.md"
+
 echo ""
 echo "========================================="
 echo "  安装完成!"
@@ -67,6 +70,7 @@ echo "    - obsidian-wiki"
 echo "    - docs-ingest"
 echo "    - wiki-query"
 echo "    - wiki-lint"
+echo "    - inspool"
 echo ""
 echo "  使用方法:"
 echo "    1. 重启 Claude Code"

@@ -241,6 +241,9 @@ cd TEMPLATE/scripts && chmod +x install.sh && ./install.sh
    
    mkdir -p {target-path}/.claude/skills/wiki-lint
    cp wiki-lint/SKILL.md {target-path}/.claude/skills/wiki-lint/SKILL.md
+   
+   mkdir -p {target-path}/.claude/skills/inspool
+   cp inspool/SKILL.md {target-path}/.claude/skills/inspool/SKILL.md
    ```
 
 5. **显示完成信息**
