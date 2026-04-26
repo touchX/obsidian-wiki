@@ -29,21 +29,35 @@ if not exist "%PROJECT_DIR%\.claude\skills" (
     mkdir "%PROJECT_DIR%\.claude\skills"
 )
 
-REM 安装 skills
+REM 安装 skills 函数
+:install_skill
+setlocal enabledelayedexpansion
+set "SRC=%~1"
+set "DEST=%~2"
+copy /Y "%SRC%" "%DEST%" >nul 2>&1
+if errorlevel 1 (
+    echo   ✗ 安装失败: %SRC%
+    endlocal
+    exit /b 1
+)
+echo   ✓ %~nx1
+endlocal
+exit /b 0
+
 echo [安装] obsidian-wiki skill...
-copy "..\SKILL.md" "%PROJECT_DIR%\.claude\skills\obsidian-wiki.md" /Y
+call :install_skill "..\SKILL.md" "%PROJECT_DIR%\.claude\skills\obsidian-wiki.md"
 
 echo [安装] docs-ingest skill...
 if not exist "%PROJECT_DIR%\.claude\skills\docs-ingest" mkdir "%PROJECT_DIR%\.claude\skills\docs-ingest"
-copy "..\docs-ingest\SKILL.md" "%PROJECT_DIR%\.claude\skills\docs-ingest\SKILL.md" /Y
+call :install_skill "..\docs-ingest\SKILL.md" "%PROJECT_DIR%\.claude\skills\docs-ingest\SKILL.md"
 
 echo [安装] wiki-query skill...
 if not exist "%PROJECT_DIR%\.claude\skills\wiki-query" mkdir "%PROJECT_DIR%\.claude\skills\wiki-query"
-copy "..\wiki-query\SKILL.md" "%PROJECT_DIR%\.claude\skills\wiki-query\SKILL.md" /Y
+call :install_skill "..\wiki-query\SKILL.md" "%PROJECT_DIR%\.claude\skills\wiki-query\SKILL.md"
 
 echo [安装] wiki-lint skill...
 if not exist "%PROJECT_DIR%\.claude\skills\wiki-lint" mkdir "%PROJECT_DIR%\.claude\skills\wiki-lint"
-copy "..\wiki-lint\SKILL.md" "%PROJECT_DIR%\.claude\skills\wiki-lint\SKILL.md" /Y
+call :install_skill "..\wiki-lint\SKILL.md" "%PROJECT_DIR%\.claude\skills\wiki-lint\SKILL.md"
 
 echo.
 echo ========================================

@@ -2,40 +2,61 @@
 # obsidian-wiki Skills 安装脚本
 # 将 skills 安装到当前项目的 .claude/skills/ 目录
 
+set -e  # 遇到错误立即退出
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="$(dirname "$SCRIPT_DIR")"
 PROJECT_DIR="$(pwd)"
 
-echo "========================================"
+# 切换到模板目录
+cd "$TEMPLATE_DIR"
+
+echo "========================================="
 echo "  obsidian-wiki Skills 安装程序"
-echo "========================================"
+echo "========================================="
 echo ""
 echo "  目标目录: $PROJECT_DIR/.claude/skills/"
 echo ""
 
 # 检查目标目录是否存在
-mkdir -p "$PROJECT_DIR/.claude/skills"
+if [ ! -d "$PROJECT_DIR/.claude" ]; then
+    echo "[创建] .claude 目录..."
+    mkdir -p "$PROJECT_DIR/.claude"
+fi
 
-# 安装 skills
+if [ ! -d "$PROJECT_DIR/.claude/skills" ]; then
+    echo "[创建] skills 目录..."
+    mkdir -p "$PROJECT_DIR/.claude/skills"
+fi
+
+# 安装 skills 函数
+install_skill() {
+    local src="$1"
+    local dest="$2"
+    if cp "$src" "$dest" 2>/dev/null; then
+        echo "  ✓ $(basename $(dirname $src))/$(basename $src)"
+    else
+        echo "  ✗ 安装失败: $src"
+        exit 1
+    fi
+}
+
 echo "[安装] obsidian-wiki skill..."
-cp "$TEMPLATE_DIR/SKILL.md" "$PROJECT_DIR/.claude/skills/obsidian-wiki.md"
+install_skill "../SKILL.md" "$PROJECT_DIR/.claude/skills/obsidian-wiki.md"
 
 echo "[安装] docs-ingest skill..."
-mkdir -p "$PROJECT_DIR/.claude/skills/docs-ingest"
-cp "$TEMPLATE_DIR/docs-ingest/SKILL.md" "$PROJECT_DIR/.claude/skills/docs-ingest/SKILL.md"
+install_skill "../docs-ingest/SKILL.md" "$PROJECT_DIR/.claude/skills/docs-ingest/SKILL.md"
 
 echo "[安装] wiki-query skill..."
-mkdir -p "$PROJECT_DIR/.claude/skills/wiki-query"
-cp "$TEMPLATE_DIR/wiki-query/SKILL.md" "$PROJECT_DIR/.claude/skills/wiki-query/SKILL.md"
+install_skill "../wiki-query/SKILL.md" "$PROJECT_DIR/.claude/skills/wiki-query/SKILL.md"
 
 echo "[安装] wiki-lint skill..."
-mkdir -p "$PROJECT_DIR/.claude/skills/wiki-lint"
-cp "$TEMPLATE_DIR/wiki-lint/SKILL.md" "$PROJECT_DIR/.claude/skills/wiki-lint/SKILL.md"
+install_skill "../wiki-lint/SKILL.md" "$PROJECT_DIR/.claude/skills/wiki-lint/SKILL.md"
 
 echo ""
-echo "========================================"
+echo "========================================="
 echo "  安装完成!"
-echo "========================================"
+echo "========================================="
 echo ""
 echo "  已安装的 skills:"
 echo "    - obsidian-wiki"
