@@ -1,3 +1,8 @@
+---
+name: learning-tracker
+description: 智能学习进化系统。追踪用户查询行为，自动构建知识画像，识别学习缺口，在适当时机主动推荐相关内容，实现知识复利持续累积。
+---
+
 # Learning Tracker — 智能学习进化系统
 
 > 让 Wiki 越用越智能，越用越了解用户

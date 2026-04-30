@@ -41,7 +41,6 @@ source: ../../archive/sources/wiki-tutorial.md
 | 资源 | 说明 |
 |------|------|
 | [[quick-start]] | 快速开始 |
-| [[quick-start]] | 详细指南 |
 | [[tips-collection]] | 实用技巧 |
 
 ---

@@ -5,7 +5,7 @@ type: source
 tags: [example, documentation]
 created: 2026-04-30
 updated: 2026-04-30
-source: ../archive/sources/example-source.md
+source: ../../archive/sources/example-source.md
 status: draft
 confidence: medium
 ---
