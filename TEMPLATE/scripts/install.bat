@@ -62,6 +62,7 @@ call :install_skill "%SKILL_ROOT%\wiki-query\SKILL.md" "%PROJECT_DIR%\.claude\sk
 echo [安装] wiki-lint skill...
 if not exist "%PROJECT_DIR%\.claude\skills\wiki-lint" mkdir "%PROJECT_DIR%\.claude\skills\wiki-lint"
 call :install_skill "%SKILL_ROOT%\wiki-lint\SKILL.md" "%PROJECT_DIR%\.claude\skills\wiki-lint\SKILL.md"
+call :install_skill "%SKILL_ROOT%\wiki-lint\lint.sh" "%PROJECT_DIR%\.claude\skills\wiki-lint\lint.sh"
 
 echo [安装] wiki-capture skill...
 if not exist "%PROJECT_DIR%\.claude\skills\wiki-capture" mkdir "%PROJECT_DIR%\.claude\skills\wiki-capture"
@@ -69,13 +70,9 @@ call :install_skill "%SKILL_ROOT%\wiki-capture\SKILL.md" "%PROJECT_DIR%\.claude\
 
 echo [安装] learning-tracker skill...
 if not exist "%PROJECT_DIR%\.claude\skills\learning-tracker" mkdir "%PROJECT_DIR%\.claude\skills\learning-tracker"
+call :install_skill "%SKILL_ROOT%\learning-tracker\SKILL.md" "%PROJECT_DIR%\.claude\skills\learning-tracker\SKILL.md"
 call :install_skill "%SKILL_ROOT%\learning-tracker\tracker.sh" "%PROJECT_DIR%\.claude\skills\learning-tracker\tracker.sh"
 call :install_skill "%SKILL_ROOT%\learning-tracker\analyzer.sh" "%PROJECT_DIR%\.claude\skills\learning-tracker\analyzer.sh"
-
-echo [安装] lint.sh...
-if not exist "%PROJECT_DIR%\scripts" mkdir "%PROJECT_DIR%\scripts"
-copy /Y "%SKILL_ROOT%\wiki-lint\lint.sh" "%PROJECT_DIR%\scripts\lint.sh" >nul 2>&1
-echo   OK lint.sh
 
 echo.
 echo ========================================
@@ -89,9 +86,6 @@ echo    - wiki-query
 echo    - wiki-lint
 echo    - wiki-capture
 echo    - learning-tracker
-echo.
-echo  已安装的工具:
-echo    - scripts\lint.sh
 echo.
 echo  使用方法:
 echo    1. 重启 Claude Code

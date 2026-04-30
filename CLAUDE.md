@@ -10,8 +10,17 @@ obsidian-wiki/
 ├── docs-ingest/           # Multi-page document ingestion
 ├── wiki-query/            # Wiki query with answer write-back
 ├── wiki-lint/             # Wiki health check (orphan, contradiction)
+│   ├── SKILL.md
+│   └── lint.sh            # Internal script (called by skill)
 ├── wiki-capture/          # Session knowledge capture
 ├── learning-tracker/      # Learning activity tracking & analytics
+│   ├── SKILL.md
+│   ├── tracker.sh         # Internal script (called by skill)
+│   └── analyzer.sh        # Internal script (called by skill)
+├── config/                # Tracker config templates
+│   └── user-activity.json.base
+├── docs/                  # Design specs
+│   └── specs/
 └── TEMPLATE/              # Installation template
     ├── wiki/              # Wiki structure
     │   ├── WIKI.md        # Schema spec

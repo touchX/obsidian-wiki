@@ -160,8 +160,8 @@ find "$WIKI_DIR" -name "*.md" -type f -exec grep -ho '\[\[[^]]*\]\]' {} \; | \
 # 找出孤立页面（未被任何页面引用）
 comm -23 "$temp_all" "$temp_linked" > "$temp_orphan"
 
-orphan_count=$(wc -l < "$temp_orphan" 2>/dev/null || echo 0)
-if [ "$orphan_count" -eq 0 ] || [ -z "$(cat "$temp_orphan")" ]; then
+orphan_count=$(grep -c . "$temp_orphan" 2>/dev/null || echo 0)
+if [ "$orphan_count" -eq 0 ]; then
     echo "- 无孤立页面 ✅" >> "$REPORT_FILE"
 else
     while IFS= read -r page; do

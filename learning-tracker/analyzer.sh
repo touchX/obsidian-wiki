@@ -42,16 +42,18 @@ check_jq() {
 init_learning_structure() {
     mkdir -p "$LEARNING_WIKI_DIR"
 
+    local today=$(date '+%Y-%m-%d')
+
     # 创建知识图谱页
     if [ ! -f "$LEARNING_WIKI_DIR/knowledge-graph.md" ]; then
-        cat > "$LEARNING_WIKI_DIR/knowledge-graph.md" << 'EOF'
+        cat > "$LEARNING_WIKI_DIR/knowledge-graph.md" << EOF
 ---
 name: synthesis/user-learning/knowledge-graph
 description: 用户知识主题关系图谱
 type: synthesis
 tags: [learning, user-profile, knowledge-graph]
-created: "{{DATE}}"
-updated: "{{DATE}}"
+created: $today
+updated: $today
 status: draft
 ---
 
@@ -67,9 +69,7 @@ status: draft
 
 ## 学习路径
 
-```chart
 (待生成)
-```
 
 ## 最近探索
 
@@ -77,21 +77,21 @@ status: draft
 
 ## 更新日志
 
-- {{DATE}}: 初始化
+- $today: 初始化
 EOF
         log_info "已创建: $LEARNING_WIKI_DIR/knowledge-graph.md"
     fi
 
     # 创建推荐页面
     if [ ! -f "$LEARNING_WIKI_DIR/recommendations.md" ]; then
-        cat > "$LEARNING_WIKI_DIR/recommendations.md" << 'EOF'
+        cat > "$LEARNING_WIKI_DIR/recommendations.md" << EOF
 ---
 name: synthesis/user-learning/recommendations
 description: 用户个性化学习推荐
 type: synthesis
 tags: [learning, recommendations]
-created: "{{DATE}}"
-updated: "{{DATE}}"
+created: $today
+updated: $today
 status: draft
 ---
 
@@ -121,14 +121,14 @@ status: draft
 
 当检测到以上模式时，主动向用户提议:
 
-```
-💡 建议: 似乎你对 [主题 A] 感兴趣，但 Wiki 中还没有相关基础概念页。
+\`\`\`
+建议: 似乎你对 [主题 A] 感兴趣，但 Wiki 中还没有相关基础概念页。
 是否要我创建一个？
-```
+\`\`\`
 
 ## 更新日志
 
-- {{DATE}}: 初始化推荐系统
+- $today: 初始化推荐系统
 EOF
         log_info "已创建: $LEARNING_WIKI_DIR/recommendations.md"
     fi

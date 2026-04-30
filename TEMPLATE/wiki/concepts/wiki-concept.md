@@ -5,7 +5,7 @@ type: concept
 tags: [wiki, structure, template]
 created: 2026-04-26
 updated: 2026-04-26
-source: ../../archive/sources/wiki-concept.md
+source: ../../archive/sources/wiki-concept.md  # 示例路径，实际指向 archive/ 中归档的源文件
 ---
 
 # Wiki Concept

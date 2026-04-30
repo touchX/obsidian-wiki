@@ -66,7 +66,7 @@ related:
 
 ## 与 Daily Note 集成
 
-如果项目启用了 Obsidian daily notes：
+如果项目启用了 Obsidian daily notes（可选，需 obsidian-cli 支持该命令）：
 
 ```bash
 # 追加摘要到当日笔记

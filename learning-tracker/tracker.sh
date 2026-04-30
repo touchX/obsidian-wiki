@@ -42,100 +42,15 @@ check_jq() {
     fi
 }
 
-# 初始化 learning tracker Wiki 目录结构（在 tracker.sh 中调用）
+# 初始化 learning tracker Wiki 目录结构 — 委托给 analyzer.sh
 init_learning_structure_from_tracker() {
-    local LEARNING_WIKI_DIR="${WIKI_DIR:-wiki}/synthesis/user-learning"
-    mkdir -p "$LEARNING_WIKI_DIR"
-
-    local today=$(date '+%Y-%m-%d')
-
-    # 创建知识图谱页
-    if [ ! -f "$LEARNING_WIKI_DIR/knowledge-graph.md" ]; then
-        cat > "$LEARNING_WIKI_DIR/knowledge-graph.md" << EOF
----
-name: synthesis/user-learning/knowledge-graph
-description: 用户知识主题关系图谱
-type: synthesis
-tags: [learning, user-profile, knowledge-graph]
-created: $today
-updated: $today
-status: draft
----
-
-# 知识主题关系图谱
-
-> 本页记录用户探索过的主题及其相互关系
-
-## 主题节点
-
-| 主题 | 频率 | 关联主题 | 理解深度 |
-|------|------|----------|----------|
-| (待填充) | | | |
-
-## 学习路径
-
-- (待生成)
-
-## 最近探索
-
-- (暂无数据)
-
-## 更新日志
-
-- $today: 初始化
-EOF
-        log_info "已创建: $LEARNING_WIKI_DIR/knowledge-graph.md"
-    fi
-
-    # 创建推荐页面
-    if [ ! -f "$LEARNING_WIKI_DIR/recommendations.md" ]; then
-        cat > "$LEARNING_WIKI_DIR/recommendations.md" << EOF
----
-name: synthesis/user-learning/recommendations
-description: 用户个性化学习推荐
-type: synthesis
-tags: [learning, recommendations]
-created: $today
-updated: $today
-status: draft
----
-
-# 学习推荐
-
-> 基于用户查询历史和知识缺口自动生成
-
-## 待探索主题
-
-### 高频但未深入
-- (分析后填充)
-
-### 遗忘复习
-- (超过 7 天未访问的主题)
-
-### 前置知识缺失
-- (用户询问的主题但缺少基础概念)
-
-## 推荐理由
-
-系统根据以下信号生成推荐:
-1. 查询频率 > 3 次但未创建概念页
-2. 连续询问相关主题（可能存在前置知识缺口）
-3. 长时间未访问曾关注的主题
-
-## 响应格式
-
-当检测到以上模式时，主动向用户提议:
-
-\`\`\`
-💡 建议: 似乎你对 [主题 A] 感兴趣，但 Wiki 中还没有相关基础概念页。
-是否要我创建一个？
-\`\`\`
-
-## 更新日志
-
-- $today: 初始化推荐系统
-EOF
-        log_info "已创建: $LEARNING_WIKI_DIR/recommendations.md"
+    local analyzer_path="${SCRIPT_DIR}/analyzer.sh"
+    if [ -f "$analyzer_path" ]; then
+        bash "$analyzer_path" init
+    else
+        # fallback: 仅创建目录
+        mkdir -p "${WIKI_DIR:-wiki}/synthesis/user-learning"
+        log_warn "analyzer.sh 未找到，Wiki 学习页面未初始化"
     fi
 }
 
@@ -194,8 +109,8 @@ record_query() {
     local current_date=$(get_date)
     local current_time=$(get_timestamp)
 
-    # 规范化 topic（转小写，移除特殊字符）
-    local normalized_topic=$(echo "$topic" | tr '[:upper:]' '[:lower]' | sed 's/[^a-z0-9-]/-/g')
+    # 规范化 topic（保留中文、字母、数字、连字符）
+    local normalized_topic=$(echo "$topic" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9一-鿿一-龥-]/-/g; s/-+/-/g; s/^-//; s/-$//')
 
     # 读取现有数据
     local existing_data=$(cat "$USER_ACTIVITY_FILE")
@@ -213,6 +128,9 @@ record_query() {
         --argjson v "$new_freq" \
         --argjson total "$((current_total + 1))" \
         '.topic_frequencies[$t] = $v | .total_queries = $total')
+
+    # 在更新 last_active 之前保存原始值（用于 streak 计算）
+    local original_last_active=$(echo "$new_topic_freq" | jq -r '.last_active // empty')
 
     # 更新 last_active
     new_topic_freq=$(echo "$new_topic_freq" | jq --arg d "$current_date" '.last_active = $d')
@@ -233,18 +151,17 @@ record_query() {
             | .[0:10]
         )')
 
-    # 更新学习连续天数
-    local last_active_date=$(echo "$recent" | jq -r '.last_active // empty')
+    # 更新学习连续天数（使用 original_last_active，非已更新的值）
     local current_streak=$(echo "$recent" | jq '.learning_streak // 0')
 
     # 计算日期差异
     local new_streak=1  # 默认从1开始
-    if [ -n "$last_active_date" ]; then
+    if [ -n "$original_last_active" ]; then
         local last_ts
-        if date -d "$last_active_date" '+%s' &>/dev/null 2>&1; then
-            last_ts=$(date -d "$last_active_date" '+%s')
+        if date -d "$original_last_active" '+%s' &>/dev/null 2>&1; then
+            last_ts=$(date -d "$original_last_active" '+%s')
         else
-            last_ts=$(date -j -f '%Y-%m-%d' "$last_active_date" '+%s' 2>/dev/null || echo 0)
+            last_ts=$(date -j -f '%Y-%m-%d' "$original_last_active" '+%s' 2>/dev/null || echo 0)
         fi
         local diff=$(( (current_time - last_ts) / 86400 ))
         if [ "$diff" -eq 0 ]; then
@@ -361,22 +278,23 @@ update_wiki_page_query() {
         return 0  # 没找到对应页面，不报错
     fi
 
-    # 读取并更新 frontmatter
+    # 读取并更新 frontmatter（在第二个 --- 之前插入新字段）
     if grep -q "^query_count:" "$page_path" 2>/dev/null; then
         # 更新现有值
         local current_count=$(grep "^query_count:" "$page_path" | head -1 | sed 's/query_count: *//' | tr -d ' ')
         local new_count=$((current_count + 1))
         sed_inplace "s/^query_count:.*/query_count: $new_count/" "$page_path"
     else
-        # 在第一个 --- 之后添加
-        sed_inplace "1a\\query_count: 1" "$page_path"
+        # 在第二个 --- 行之前插入（frontmatter 内部）
+        sed_inplace "0,/^---$/! {0,/^---$/ {s/^---$/query_count: 1\n---/}}" "$page_path"
     fi
 
     # 更新 last_queried
     if grep -q "^last_queried:" "$page_path" 2>/dev/null; then
         sed_inplace "s/^last_queried:.*/last_queried: $current_date/" "$page_path"
     else
-        sed_inplace "1a\\last_queried: $current_date" "$page_path"
+        # 在第二个 --- 行之前插入
+        sed_inplace "0,/^---$/! {0,/^---$/ {s/^---$/last_queried: $current_date\n---/}}" "$page_path"
     fi
 }
 

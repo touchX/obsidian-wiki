@@ -4,7 +4,7 @@
 
 ## 项目架构
 
-obsidian-wiki 是一个基于 Claude Code Best Practice Wiki 方法论的独立知识库系统。
+obsidian-wiki 是一个基于 Andrej Karpathy LLM Wiki 理论的独立知识库系统。
 
 ```
 obsidian-wiki/
@@ -108,11 +108,7 @@ source: ../../archive/sources/.. # 建议：源文件路径
    ---
    name: skill-name
    description: 一句话说明技能用途
-   triggers:
-     - "触发关键词1"
-     - "触发关键词2"
-   requirements:
-     - 依赖1 (如有)
+   version: 0.1.0
    ---
    ```
 

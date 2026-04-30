@@ -47,8 +47,6 @@ cp ~/documents/research-notes.md raw/
 
 ## 下一步
 
-## 下一步
-
 - [[wiki-concept]] — 了解 Wiki 概念
 - [[wiki-tutorial]] — 深入学习 Wiki 使用
 

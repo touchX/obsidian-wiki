@@ -31,7 +31,7 @@ description: Wiki 健康检查与知识演化技能。当用户要求检查 Wiki
 **使用 wiki-lint skill**:
 直接调用 wiki-lint skill，脚本由 skill 内部调用，对用户透明。
 
-**矛盾检测**（LLM 辅助，脚本无法自动完成）:
+**矛盾检测**（LLM 辅助，脚本无法自动完成 — 以下为 skill 内部使用的命令）:
 ```bash
 # 查找所有被标记为 challenged 的页面
 grep -r "status: challenged" wiki/ --include="*.md" -l

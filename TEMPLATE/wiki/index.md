@@ -24,7 +24,7 @@ confidence: high
 | [[guides/]] | 操作指南 |
 | [[tutorial/]] | 教程 |
 | [[tips/]] | 实用技巧 |
-| [[wiki-index.base]] | 自动索引（dataview） |
+| [wiki-index.base](wiki-index.base) | 自动索引（Bases 动态视图） |
 
 ## 快速开始
 
