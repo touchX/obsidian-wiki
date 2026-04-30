@@ -97,7 +97,26 @@ route_file() {
 
     # 获取 MIME 类型
     local mime_type
-    mime_type=$(file --mime-type -b "$file_path")
+    mime_type=$(file --mime-type -b "$file_path" 2>/dev/null)
+
+    # 对于空文件、text/plain 或检测失败的情况，使用扩展名降级
+    if [ -z "$mime_type" ] || [[ "$mime_type" == "text/plain" ]] || [[ "$mime_type" == "inode/x-empty" ]]; then
+        local ext="${file_path##*.}"
+        case "$ext" in
+            docx) mime_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document" ;;
+            xlsx) mime_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ;;
+            pdf)  mime_type="application/pdf" ;;
+            md)   mime_type="text/markdown" ;;
+            doc)  mime_type="application/msword" ;;
+            xls)  mime_type="application/vnd.ms-excel" ;;
+            ppt)  mime_type="application/vnd.ms-powerpoint" ;;
+            pptx) mime_type="application/vnd.openxmlformats-officedocument.presentationml.presentation" ;;
+            html) mime_type="text/html" ;;
+            htm)  mime_type="text/html" ;;
+            txt)  mime_type="text/plain" ;;
+            *)    mime_type="unknown/$ext" ;;
+        esac
+    fi
 
     # 获取对应的 Skill
     local skill
