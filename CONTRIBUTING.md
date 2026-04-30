@@ -1,4 +1,4 @@
-# Contributing to obsidian-wiki
+# Contributing to obsidian-wiki (v0.2.0)
 
 感谢您对 obsidian-wiki 项目的关注！本文档指导您如何参与贡献。
 
@@ -37,12 +37,12 @@ obsidian-wiki/
 ### 克隆项目
 
 ```bash
-# 克隆主仓库
-git clone https://github.com/touchX/obsidian-wiki.git
+# 克隆主仓库（请替换为实际仓库地址）
+git clone https://github.com/<YOUR_USERNAME>/obsidian-wiki.git
 cd obsidian-wiki
 
 # 或者作为子模块添加到现有项目
-git submodule add https://github.com/touchX/obsidian-wiki.git docs/superpowers/obsidian-wiki
+git submodule add https://github.com/<YOUR_USERNAME>/obsidian-wiki.git docs/superpowers/obsidian-wiki
 ```
 
 ## 贡献类型

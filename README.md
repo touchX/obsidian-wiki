@@ -159,7 +159,7 @@ draft → stable → (challenged → stable | superseded)
 ## 健康检查
 
 ```bash
-cd wiki && ../scripts/wiki-lint.sh
+cd wiki && ../scripts/lint.sh
 ```
 
 检查内容:

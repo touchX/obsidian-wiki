@@ -1,6 +1,7 @@
 ---
 name: obsidian-wiki
 description: 独立的 Wiki 知识库系统 — 基于 Karpathy LLM Wiki 理论的多页综合知识引擎。支持创建、多页摄取、查询写回、矛盾检测、健康检查全流程。当用户提到 wiki、知识库、知识管理、笔记系统、文档归档、obsidian、文档体系化、整理文档、建立知识体系、知识复利时必须使用。即使用户只说"整理这些资料"或"建个知识库"，也应触发本技能。
+version: 0.2.0
 ---
 
 # Obsidian Wiki Skill

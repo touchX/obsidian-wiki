@@ -1,4 +1,4 @@
-# CLAUDE.md — obsidian-wiki Skill
+# CLAUDE.md — obsidian-wiki Skill (v0.2.0)
 
 Independent Wiki knowledge base system based on Karpathy LLM Wiki theory.
 
