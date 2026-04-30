@@ -80,6 +80,8 @@ type: concept|entity|source|synthesis|guide|tutorial|tips  # 必需
 tags: [tag1, tag2]              # 必需：标签数组
 created: YYYY-MM-DD             # 必需：创建日期
 updated: YYYY-MM-DD             # 必需：更新日期
+status: draft|stable|challenged|superseded  # 建议：知识状态
+confidence: low|medium|high     # 建议：置信度
 source: ../../archive/sources/.. # 建议：源文件路径
 ---
 ```

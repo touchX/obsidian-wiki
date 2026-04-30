@@ -302,7 +302,7 @@ related:
 
 ## 相关资源
 
-- [WIKI.md](wiki/WIKI.md) — 完整 Schema 规范
+- [WIKI.md](TEMPLATE/wiki/WIKI.md) — 完整 Schema 规范
 - [docs-ingest](../docs-ingest/SKILL.md) — 多页摄取技能
 - [wiki-query](../wiki-query/SKILL.md) — 查询写回技能
 - [wiki-lint](../wiki-lint/SKILL.md) — 健康检查技能
