@@ -296,7 +296,6 @@ analyze_learning() {
 
     # 遗忘提醒
     echo "🔔 遗忘提醒"
-    local today=$(get_date)
     local recent=$(echo "$data" | jq -r '.recent_topics // []')
 
     if [ "$recent" != "[]" ] && [ "$recent" != "null" ]; then

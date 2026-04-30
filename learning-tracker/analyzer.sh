@@ -357,11 +357,11 @@ main() {
             echo "Learning Analyzer — 学习分析器"
             echo ""
             echo "使用方法:"
-            echo "  analyzer.sh init           # 初始化学习目录结构"
+            echo "  analyzer.sh init          # 初始化学习目录结构"
             echo "  analyzer.sh update-graph   # 更新知识图谱"
-            echo "  analyzer.sh update-rec      # 更新推荐页面"
-            echo "  analyzer.sh report          # 生成会话总结"
-            echo "  analyzer.sh analyze         # 执行完整分析"
+            echo "  analyzer.sh update-rec     # 更新推荐页面"
+            echo "  analyzer.sh report        # 生成会话总结"
+            echo "  analyzer.sh analyze       # 执行完整分析"
             ;;
     esac
 }
