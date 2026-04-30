@@ -154,6 +154,9 @@ echo "" >> "$REPORT_FILE"
 
 missing_sources=0
 while IFS= read -r -d '' file; do
+    # 跳过报告文件本身
+    [[ "$file" == *"/WIKI-LINT-REPORT.md" ]] || [[ "$file" == *"WIKI-LINT-REPORT.md" ]] && continue
+
     source_path=$(grep "^source:" "$file" | sed 's/source: *//' | tr -d ' ')
     if [ -n "$source_path" ] && [ "$source_path" != "conversation" ]; then
         # 转换相对路径为绝对路径检查

@@ -78,6 +78,11 @@ echo [安装] wiki-capture skill...
 if not exist "%PROJECT_DIR%\.claude\skills\wiki-capture" mkdir "%PROJECT_DIR%\.claude\skills\wiki-capture"
 call :install_skill "inspool\SKILL.md" "%PROJECT_DIR%\.claude\skills\wiki-capture\SKILL.md"
 
+REM 复制 wiki-lint.sh 到 scripts 目录
+if not exist "%PROJECT_DIR%\scripts" mkdir "%PROJECT_DIR%\scripts"
+copy /Y "scripts\wiki-lint.sh" "%PROJECT_DIR%\scripts\wiki-lint.sh" >nul 2>&1
+echo   ✓ wiki-lint.sh
+
 echo.
 echo ========================================
 echo  安装完成!

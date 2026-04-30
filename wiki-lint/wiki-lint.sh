@@ -99,6 +99,9 @@ while IFS= read -r page_name; do
     # 跳过外部链接
     [[ "$page_name" == http* ]] || [[ "$page_name" == ../* ]] || [[ "$page_name" == /* ]] && continue
 
+    # 跳过目录链接 (如 concepts/) -> 实际文件是 concepts/wiki-concept
+    [[ "$page_name" == */ ]] && continue
+
     if ! find "$WIKI_DIR" -type f -name "${page_name}.md" 2>/dev/null | grep -q .; then
         echo "- \`[[$page_name]]\`: 目标页面不存在" >> "$REPORT_FILE"
         broken_refs=$((broken_refs + 1))
