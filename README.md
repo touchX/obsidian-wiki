@@ -30,6 +30,10 @@ obsidian --version
 - 标准化 Frontmatter 和目录组织
 - 内置 Wiki 健康检查脚本
 - 预配置 Obsidian Vault 设置
+- 多页面文档摄取（docs-ingest）
+- Wiki 查询与回答写入（wiki-query）
+- Wiki 健康检查与孤立页面检测（wiki-lint）
+- 会话知识沉淀（wiki-capture）
 
 ## 预配置插件
 
@@ -54,18 +58,23 @@ TEMPLATE 包含以下预配置插件：
 
 ```
 project/
-├── .obsidian/          # Obsidian 配置
-├── archive/            # 归档目录
-├── docs/                # 文档目录
-├── raw/                 # 临时存放待处理文件
-├── scripts/             # 工具脚本
-└── wiki/                # Wiki 知识库
-    ├── concepts/        # 核心概念
-    ├── entities/         # 实体文档
-    ├── guides/          # 使用指南
-    ├── synthesis/        # 综合分析
-    ├── tips/             # 实用技巧
-    └── tutorial/         # 教程
+├── .obsidian/              # Obsidian 配置 + 插件
+├── archive/sources/         # 源文件归档
+├── raw/notes/              # 待处理文件
+├── scripts/                # 工具脚本
+│   ├── install.sh
+│   └── wiki-lint.sh
+└── wiki/                   # Wiki 知识库（LLM 所有）
+    ├── concepts/            # 核心概念
+    ├── entities/           # 实体文档
+    ├── sources/            # 来源摘要
+    ├── synthesis/          # 综合分析
+    ├── guides/             # 使用指南
+    ├── tips/               # 实用技巧
+    ├── tutorial/           # 教程
+    ├── wiki-index.base     # 自动索引（dataview）
+    ├── WIKI.md             # Schema 规范
+    └── WIKI-LINT-REPORT.md # 健康报告
 ```
 
 ## 使用流程
@@ -107,10 +116,12 @@ cd wiki && ../scripts/wiki-lint.sh
 ---
 name: page-slug
 description: 一句话描述
-type: concept | entity | source | synthesis | guide
+type: concept | entity | source | synthesis | guide | tips | tutorial
 tags: [tag1, tag2]
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
+status: draft | stable | challenged | superseded
+confidence: high | medium | low
 source: ../../archive/sources/filename.md
 ---
 ```
@@ -124,11 +135,13 @@ source: ../../archive/sources/filename.md
 | `source` | 来源摘要 |
 | `synthesis` | 综合分析 |
 | `guide` | 使用指南 |
+| `tips` | 实用技巧 |
+| `tutorial` | 教程 |
 
 ## 相关资源
 
 - [Wiki Schema 规范](wiki/WIKI.md) — 完整架构说明
-- [设计规范](../specs/2026-04-26-obsidian-wiki-design.md) — Skill 设计文档
+- [设计规范](llm-wiki.md) — LLM Wiki 核心理论
 
 ---
 

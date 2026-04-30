@@ -11,6 +11,17 @@ set "PROJECT_DIR=%cd%"
 REM 切换到模板目录
 cd /d "%TEMPLATE_DIR%"
 
+REM 验证目标目录
+if "%PROJECT_DIR%"=="" (
+    echo [错误] PROJECT_DIR 未设置
+    exit /b 1
+)
+
+if not exist "%PROJECT_DIR%" (
+    echo [错误] 目标目录不存在: %PROJECT_DIR%
+    exit /b 1
+)
+
 echo ========================================
 echo  obsidian-wiki Skills 安装程序
 echo ========================================
@@ -49,16 +60,23 @@ exit /b 0
 
 echo [安装] obsidian-wiki skill...
 if not exist "%PROJECT_DIR%\.claude\skills" mkdir "%PROJECT_DIR%\.claude\skills"
-call :install_skill "..\SKILL.md" "%PROJECT_DIR%\.claude\skills\obsidian-wiki.md"
+call :install_skill "SKILL.md" "%PROJECT_DIR%\.claude\skills\obsidian-wiki.md"
 
 echo [安装] docs-ingest skill...
-call :install_skill "..\docs-ingest\SKILL.md" "%PROJECT_DIR%\.claude\skills\docs-ingest\SKILL.md"
+if not exist "%PROJECT_DIR%\.claude\skills\docs-ingest" mkdir "%PROJECT_DIR%\.claude\skills\docs-ingest"
+call :install_skill "docs-ingest\SKILL.md" "%PROJECT_DIR%\.claude\skills\docs-ingest\SKILL.md"
 
 echo [安装] wiki-query skill...
-call :install_skill "..\wiki-query\SKILL.md" "%PROJECT_DIR%\.claude\skills\wiki-query\SKILL.md"
+if not exist "%PROJECT_DIR%\.claude\skills\wiki-query" mkdir "%PROJECT_DIR%\.claude\skills\wiki-query"
+call :install_skill "wiki-query\SKILL.md" "%PROJECT_DIR%\.claude\skills\wiki-query\SKILL.md"
 
 echo [安装] wiki-lint skill...
-call :install_skill "..\wiki-lint\SKILL.md" "%PROJECT_DIR%\.claude\skills\wiki-lint\SKILL.md"
+if not exist "%PROJECT_DIR%\.claude\skills\wiki-lint" mkdir "%PROJECT_DIR%\.claude\skills\wiki-lint"
+call :install_skill "wiki-lint\SKILL.md" "%PROJECT_DIR%\.claude\skills\wiki-lint\SKILL.md"
+
+echo [安装] wiki-capture skill...
+if not exist "%PROJECT_DIR%\.claude\skills\wiki-capture" mkdir "%PROJECT_DIR%\.claude\skills\wiki-capture"
+call :install_skill "inspool\SKILL.md" "%PROJECT_DIR%\.claude\skills\wiki-capture\SKILL.md"
 
 echo.
 echo ========================================
@@ -70,6 +88,7 @@ echo    - obsidian-wiki
 echo    - docs-ingest
 echo    - wiki-query
 echo    - wiki-lint
+echo    - wiki-capture ^(原 inspool^)
 echo.
 echo  使用方法:
 echo    1. 重启 Claude Code

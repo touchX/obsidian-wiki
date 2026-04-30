@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Wiki Lint Tool — 检查 Wiki 健康状况
 # 使用方法: cd wiki && ../scripts/wiki-lint.sh
+# 或从项目根目录: bash wiki-lint/wiki-lint.sh
 
 set -euo pipefail
 
@@ -44,6 +45,11 @@ missing_description=0
 missing_type=0
 
 while IFS= read -r -d '' file; do
+    # 跳过报告文件本身
+    if [[ "$file" == *"/WIKI-LINT-REPORT.md" ]] || [[ "$file" == *"WIKI-LINT-REPORT.md" ]]; then
+        continue
+    fi
+
     if ! grep -q "^---$" "$file"; then
         echo "- $file: 缺少 frontmatter" >> "$REPORT_FILE"
         missing_frontmatter=$((missing_frontmatter + 1))
@@ -80,11 +86,20 @@ echo "## 链接健康" >> "$REPORT_FILE"
 echo "" >> "$REPORT_FILE"
 
 temp_refs=$(mktemp)
-find "$WIKI_DIR" -type f -name "*.md" -exec grep -ho '\[\[[^]]*\]\]' {} \; | sed 's/\[\[//g; s/\]\]//g; s/|.*//' | sort -u > "$temp_refs"
+find "$WIKI_DIR" -type f -name "*.md" -exec grep -ho '\[\[[^]]*\]\]' {} \; | \
+    sed 's/\[\[//g; s/\]\]//g; s/|.*//' | sort -u > "$temp_refs"
 
 broken_refs=0
 while IFS= read -r page_name; do
-    if ! find "$WIKI_DIR" -type f -name "${page_name}.md" | grep -q .; then
+    # 跳过空链接和示例
+    [ -z "$page_name" ] && continue
+    [[ "$page_name" == *"..."* ]] && continue
+    [[ "$page_name" == "xxx" ]] && continue
+
+    # 跳过外部链接
+    [[ "$page_name" == http* ]] || [[ "$page_name" == ../* ]] || [[ "$page_name" == /* ]] && continue
+
+    if ! find "$WIKI_DIR" -type f -name "${page_name}.md" 2>/dev/null | grep -q .; then
         echo "- \`[[$page_name]]\`: 目标页面不存在" >> "$REPORT_FILE"
         broken_refs=$((broken_refs + 1))
     fi
@@ -115,11 +130,12 @@ find "$WIKI_DIR" -name "*.md" -type f -exec grep -ho '\[\[[^]]*\]\]' {} \; | \
 # 找出孤立页面（未被任何页面引用）
 comm -23 "$temp_all" "$temp_linked" > "$temp_orphan"
 
-orphan_count=$(wc -l < "$temp_orphan")
+orphan_count=$(wc -l < "$temp_orphan" 2>/dev/null || echo 0)
 if [ "$orphan_count" -eq 0 ] || [ -z "$(cat "$temp_orphan")" ]; then
     echo "- 无孤立页面 ✅" >> "$REPORT_FILE"
 else
     while IFS= read -r page; do
+        [ -z "$page" ] && continue
         echo "- \`$page.md\` — 无入站链接" >> "$REPORT_FILE"
     done < "$temp_orphan"
 fi
@@ -140,7 +156,9 @@ else
     if [ "$challenged_count" -gt 0 ]; then
         echo "- 发现 $challenged_count 个 \`status: challenged\` 页面" >> "$REPORT_FILE"
         find "$WIKI_DIR" -name "*.md" -type f -exec grep -l "^status: challenged" {} \; 2>/dev/null | \
-            sed 's|'"$WIKI_DIR"'/||' | while read f; do echo "  - $f"; done >> "$REPORT_FILE"
+            sed 's|'"$WIKI_DIR"'/||' | while read f; do
+                echo "  - $f" >> "$REPORT_FILE"
+            done
     fi
     if [ "$warning_count" -gt 0 ]; then
         echo "- 发现 $warning_count 个 \`> [!warning]\` 标记" >> "$REPORT_FILE"
@@ -154,6 +172,9 @@ echo "" >> "$REPORT_FILE"
 
 missing_sources=0
 while IFS= read -r -d '' file; do
+    # 跳过报告文件本身
+    [[ "$file" == *"/WIKI-LINT-REPORT.md" ]] || [[ "$file" == *"WIKI-LINT-REPORT.md" ]] && continue
+
     source_path=$(grep "^source:" "$file" | sed 's/source: *//' | tr -d ' ')
     if [ -n "$source_path" ] && [ "$source_path" != "conversation" ]; then
         # 转换相对路径为绝对路径检查
