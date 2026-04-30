@@ -1,148 +1,180 @@
 # Obsidian Wiki Skill
 
-基于 Claude Code Best Practice Wiki 方法论的 Obsidian Wiki 知识库快速创建工具。
+> 基于 Karpathy LLM Wiki 理论的知识复利引擎 — 让每次问答都使知识库更丰富
 
-## 前置要求
+[![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)](CHANGELOG.md)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-⚠️ **使用前必须安装以下依赖：**
+## 核心理念
 
-| 依赖 | 安装地址 |
-|------|----------|
-| obsidian-cli | https://obsidian.md/cli |
-| obsidian-skills | https://github.com/kepano/obsidian-skills |
+**Wiki 是持久增长的复利资产。** 不同于传统 RAG 的"每次查询从零检索"，LLM Wiki 在每次摄入和问答时都**更新和维护 Wiki 本身**——交叉引用已建立、矛盾已标记、综合分析已形成。知识随时间积累，而非重复消耗。
 
-### 安装步骤
-
-```bash
-# 1. 安装 obsidian-cli
-npm install -g @obsidianmd/obsidian-utilities-cli
-
-# 2. 安装 obsidian-skills（Obsidian 插件）
-#    Obsidian 设置 → 社区插件 → 搜索 "obsidian-skills"
-
-# 3. 验证安装
-obsidian --version
+```
+传统 RAG: 文档 → 查询 → 答案 (知识丢失)
+LLM Wiki:  文档 → 摄入 → Wiki 丰富 → 查询 → 答案 (知识累积)
 ```
 
-## 功能
+## 快速开始
 
-- 一键创建完整的 Wiki 知识库结构
-- 标准化 Frontmatter 和目录组织
-- 内置 Wiki 健康检查脚本
-- 预配置 Obsidian Vault 设置
-- 多页面文档摄取（docs-ingest）
-- Wiki 查询与回答写入（wiki-query）
-- Wiki 健康检查与孤立页面检测（wiki-lint）
-- 会话知识沉淀（wiki-capture）
+### 1. 安装依赖
 
-## 预配置插件
+```bash
+# 安装 obsidian-cli
+npm install -g @obsidianmd/obsidian-utilities-cli
 
-TEMPLATE 包含以下预配置插件：
+# 安装 obsidian-skills (Obsidian 插件)
+# 设置 → 社区插件 → 搜索 "obsidian-skills"
+```
 
-| 插件 | 用途 |
-|------|------|
-| **dataview** | 数据查询和索引 — 自动维护 wiki/index.md |
-| **calendar** | 日历视图 — 按日期浏览 Wiki 操作日志 |
-| **claudian** | Claude Code 集成 — 与 Claude CLI 交互 |
-| **obsidian-branding** | 界面美化 — 统一视觉风格 |
-| **omnisearch** | 统一搜索 — 支持图片 OCR、音视频搜索 |
-| **obsidian-excalidraw-plugin** | Excalidraw 集成 — 画布绘图 |
-| **templater-obsidian** | 模板引擎 — 高级动态模板 |
-| **tag-wrangler** | 标签管理 — 批量重命名、合并标签 |
-| **file-explorer-note-count** | 目录计数 — 文件浏览器显示笔记数量 |
-| **obsidian-custom-attachment-location** | 附件管理 — 自定义附件存储位置 |
-| **obsidian-local-rest-api** | REST API — 本地 HTTP API 集成 |
-| **recent-files-obsidian** | 最近文件 — 快速访问最近打开的文件 |
+### 2. 初始化 Wiki
+
+```bash
+# 复制模板到目标目录
+cp -r TEMPLATE my-wiki/
+cd my-wiki
+
+# 或使用 Claude Code
+# 说: "使用 obsidian-wiki 初始化"
+```
+
+### 3. 添加知识
+
+```
+1. 将文档放入 raw/ 目录
+2. 说: "使用 docs-ingest 摄取"
+3. 自动创建/更新多个 Wiki 页面
+```
+
+### 4. 查询知识
+
+```
+说: "使用 wiki-query 查询关于 XXX"
+优质答案会自动提议写回为 synthesis 页面
+```
+
+## 核心功能
+
+| 技能 | 触发 | 能力 |
+|------|--------|------|
+| `docs-ingest` | 摄取文档、整理资料 | 1:N 多页综合摄取，矛盾检测 |
+| `wiki-query` | 搜索、解释、比较 | Wiki-First 原则 + 答案写回 |
+| `wiki-lint` | 健康检查、维护 | 孤立页面、矛盾、知识缺口检测 |
+| `wiki-capture` | 记录经验、沉淀知识 | 会话高价值内容捕获 |
+
+## 工作流
+
+```
+                    ┌─────────────────────────────────────┐
+                    │           raw/ (摄入前)              │
+                    │   源文档、网页剪藏、会话笔记           │
+                    └──────────────┬──────────────────────┘
+                                   │ docs-ingest
+                                   ▼
+┌──────────────┐    ┌─────────────────────────────────────┐
+│ archive/     │◄───│         wiki/ (LLM 拥有)             │
+│ (不可变归档)  │    │  concepts/ entities/ synthesis/     │
+└──────────────┘    │  sources/ guides/ tips/ tutorial/    │
+                    └──────────────┬──────────────────────┘
+                                   │ wiki-query
+                                   ▼
+                          ┌─────────────────┐
+                          │   知识复利       │
+                          │ 答案写回 synthesis/
+                          └─────────────────┘
+```
 
 ## 目录结构
 
 ```
-project/
-├── .obsidian/              # Obsidian 配置 + 插件
-├── archive/sources/         # 源文件归档
-├── raw/notes/              # 待处理文件
-├── scripts/                # 工具脚本
-│   ├── install.sh
-│   └── wiki-lint.sh
-└── wiki/                   # Wiki 知识库（LLM 所有）
-    ├── concepts/            # 核心概念
-    ├── entities/           # 实体文档
-    ├── sources/            # 来源摘要
-    ├── synthesis/          # 综合分析
-    ├── guides/             # 使用指南
-    ├── tips/               # 实用技巧
-    ├── tutorial/           # 教程
-    ├── wiki-index.base     # 自动索引（dataview）
-    ├── WIKI.md             # Schema 规范
-    └── WIKI-LINT-REPORT.md # 健康报告
+my-wiki/
+├── .obsidian/              # Obsidian 配置 + 12 个预配置插件
+├── raw/                    # 待处理文件
+│   └── notes/            # 会话捕获笔记
+├── archive/               # 源文件归档 (不可变)
+│   └── sources/
+├── scripts/               # 工具脚本
+│   └── wiki-lint.sh      # 健康检查
+└── wiki/                  # Wiki 知识库
+    ├── WIKI.md           # Schema 规范
+    ├── wiki-index.base   # Bases 动态索引
+    ├── index.md          # 手动索引
+    ├── log.md            # 操作日志
+    ├── concepts/         # 核心概念
+    ├── entities/         # 实体文档
+    ├── synthesis/        # 综合分析 ← 答案写回目标
+    ├── sources/          # 来源摘要
+    ├── guides/          # 使用指南
+    ├── tips/            # 实用技巧
+    └── tutorial/        # 教程
 ```
 
-## 使用流程
+## Frontmatter 标准
 
-### 1. 初始化 Wiki
-
-```bash
-# 创建新的 Wiki 目录
-mkdir my-wiki
-cd my-wiki
-
-# 复制模板（手动操作）
-# 将 TEMPLATE/ 目录复制到目标位置
-
-# 或使用 obsidian-wiki skill 交互式初始化
+```yaml
+---
+name: page-slug                    # 页面 slug
+description: 一句话描述             # 必需
+type: concept|entity|source|...   # 7 种类型
+tags: [tag1, tag2]                # 标签
+created: YYYY-MM-DD                # 创建日期
+updated: YYYY-MM-DD                # 更新日期
+status: draft|stable|challenged|superseded  # 知识状态
+confidence: high|medium|low
+source: ../../archive/sources/...  # 原始来源
+---
 ```
 
-### 2. 添加知识
+### 页面类型
 
-1. 将源文档放入 `raw/` 目录
-2. 使用 `docs-ingest` skill 摄取
-3. 文档自动归档到 `archive/`
+| 类型 | 用途 | 示例 |
+|------|------|------|
+| `concept` | 核心概念 | "Wiki 知识库方法论" |
+| `entity` | 实体文档 | "项目 X 技术栈" |
+| `source` | 来源摘要 | "论文 Y 要点" |
+| `synthesis` | 综合分析 | "技术选型对比" |
+| `guide` | 使用指南 | "快速上手指南" |
+| `tips` | 实用技巧 | "维护技巧" |
+| `tutorial` | 教程 | "完整教程" |
 
-### 3. 查询知识
+### 知识状态生命周期
 
-1. 读取 `wiki/index.md` 了解结构
-2. 使用 Wiki 链接 `[[page]]` 浏览
-3. 综合多个页面回答问题
+```
+draft → stable → (challenged → stable | superseded)
+```
 
-### 4. 健康检查
+## 预配置插件
+
+| 插件 | 用途 |
+|------|------|
+| **dataview** | 数据查询，自动维护索引 |
+| **calendar** | 日历视图，按日期浏览日志 |
+| **claudian** | Claude Code 集成 |
+| **omnisearch** | 统一搜索 (含图片 OCR) |
+| **obsidian-excalidraw-plugin** | Excalidraw 画布 |
+| **templater-obsidian** | 高级模板引擎 |
+| **obsidian-local-rest-api** | 本地 HTTP API |
+| + 5 更多... | 完整列表见 [WIKI.md](TEMPLATE/wiki/WIKI.md) |
+
+## 健康检查
 
 ```bash
 cd wiki && ../scripts/wiki-lint.sh
 ```
 
-## Frontmatter 标准
-
-```markdown
----
-name: page-slug
-description: 一句话描述
-type: concept | entity | source | synthesis | guide | tips | tutorial
-tags: [tag1, tag2]
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
-status: draft | stable | challenged | superseded
-confidence: high | medium | low
-source: ../../archive/sources/filename.md
----
-```
-
-## 页面类型
-
-| 类型 | 用途 |
-|------|------|
-| `concept` | 核心概念定义 |
-| `entity` | 实体文档记录 |
-| `source` | 来源摘要 |
-| `synthesis` | 综合分析 |
-| `guide` | 使用指南 |
-| `tips` | 实用技巧 |
-| `tutorial` | 教程 |
+检查内容:
+- Frontmatter 完整性
+- 交叉引用有效性
+- 孤立页面检测
+- 知识矛盾标记
+- Source 路径正确性
 
 ## 相关资源
 
-- [Wiki Schema 规范](wiki/WIKI.md) — 完整架构说明
-- [设计规范](llm-wiki.md) — LLM Wiki 核心理论
+- [Wiki Schema 规范](TEMPLATE/wiki/WIKI.md) — 完整架构说明
+- [LLM Wiki 理论](llm-wiki.md) — Karpathy 核心理论
+- [HELP.md](HELP.md) — 快速参考
+- [CHANGELOG.md](CHANGELOG.md) — 版本历史
 
 ---
 
-*基于 Claude Code Best Practice 构建*
+*基于 Andrej Karpathy LLM Wiki 理论构建*
