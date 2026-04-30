@@ -220,7 +220,8 @@ record_query() {
 insert_in_frontmatter() {
     local file="$1"
     local line="$2"
-    local tmp="${file}.tmp.$$"
+    local tmp
+    tmp=$(mktemp "${file}.tmp.XXXXXX")
     awk -v ins="$line" '
         /^---$/ { count++; if (count == 2) print ins }
         { print }

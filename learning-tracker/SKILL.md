@@ -131,8 +131,8 @@ learning-tracker/
 ├── SKILL.md                    # 本文档
 ├── tracker.sh                  # 追踪主脚本
 ├── analyzer.sh                 # 分析器脚本
-└── config/
-    └── user-activity.json.base # 数据模板
+└── config/                     # 运行时自动创建（tracker.sh init）
+    └── user-activity.json      # 运行时自动创建（数据内置于 tracker.sh）
 
 wiki/synthesis/user-learning/   # Wiki 层（自动创建）
 ├── knowledge-graph.md
