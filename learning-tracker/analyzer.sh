@@ -221,7 +221,7 @@ update_recommendations() {
             [ -z "$topic" ] && continue
             # 检查是否有对应的 Wiki 页面
             local has_page=false
-            for dir in concepts entities sources synthesis; do
+            for dir in concepts entities sources synthesis guides tips tutorial; do
                 if [ -d "$WIKI_DIR/$dir" ] && find "$WIKI_DIR/$dir" -name "*.md" -type f 2>/dev/null | xargs grep -l "^name:.*$topic" 2>/dev/null | grep -q .; then
                     has_page=true
                     break

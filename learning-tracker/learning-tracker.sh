@@ -194,15 +194,32 @@ update_wiki_page_query() {
     local slug=""
 
     # 搜索概念页面
+    # 策略：优先按文件名匹配（文件名通常是 normalized_topic 格式）
+    # fallback: 扫描 name 字段进行模糊匹配
     for dir in concepts entities sources synthesis guides tips tutorial; do
         if [ -d "$WIKI_DIR/$dir" ]; then
+            # 1. 先尝试精确匹配文件名（如 javascript.md → javascript）
             local found=$(find "$WIKI_DIR/$dir" -name "*.md" -type f 2>/dev/null | while read f; do
-                # 使用 grep -F 精确匹配 name 字段值，避免正则表达式误匹配
-                if grep -qF "name: $topic" "$f" 2>/dev/null; then
+                local fname=$(basename "$f" .md)
+                if [[ "$fname" == "$topic" ]]; then
                     echo "$f"
                     break
                 fi
             done)
+
+            # 2. 如果没找到，尝试模糊匹配 name 字段（不区分大小写）
+            if [ -z "$found" ]; then
+                found=$(find "$WIKI_DIR/$dir" -name "*.md" -type f 2>/dev/null | while read f; do
+                    local name_val=$(grep "^name:" "$f" 2>/dev/null | head -1 | sed 's/name: *//i' | tr -d ' ')
+                    # 规范化 name 字段后对比（如 JavaScript → javascript）
+                    local norm_name=$(echo "$name_val" | tr '[:upper:]' '[:lower]' | sed 's/[^a-z0-9-]/-/g')
+                    if [[ "$norm_name" == "$topic" ]]; then
+                        echo "$f"
+                        break
+                    fi
+                done)
+            fi
+
             if [ -n "$found" ]; then
                 page_path="$found"
                 break
