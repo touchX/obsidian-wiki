@@ -93,8 +93,8 @@ my-wiki/
 │   └── notes/            # 会话捕获笔记
 ├── archive/               # 源文件归档 (不可变)
 │   └── sources/
-├── scripts/               # 工具脚本
-│   └── lint.sh           # 健康检查
+├── scripts/               # 安装脚本
+│   └── install.sh
 └── wiki/                  # Wiki 知识库
     ├── WIKI.md           # Schema 规范
     ├── wiki-index.base   # Bases 动态索引
@@ -158,9 +158,7 @@ draft → stable → (challenged → stable | superseded)
 
 ## 健康检查
 
-```bash
-cd wiki && ../scripts/lint.sh
-```
+使用 wiki-lint skill 进行健康检查:
 
 检查内容:
 - Frontmatter 完整性

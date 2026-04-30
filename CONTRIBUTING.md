@@ -63,7 +63,7 @@ git submodule add https://github.com/<YOUR_USERNAME>/obsidian-wiki.git docs/supe
 - 改进目录结构
 
 ### 工具脚本
-- 增强 `lint.sh` 功能
+- 增强 wiki-lint skill 功能
 - 添加自动化工具
 - 性能优化
 
@@ -144,8 +144,8 @@ git checkout -b fix/your-bug-fix
 ### 2. 开发与测试
 
 ```bash
-# 运行 Wiki 健康检查
-cd TEMPLATE/wiki && ../../scripts/lint.sh
+# 运行 Wiki 健康检查（使用 wiki-lint skill）
+# 在 Claude Code 中说：使用 wiki-lint
 
 # 测试技能（需要 Claude Code 运行中）
 # 在 Claude Code 中说：使用 <skill-name>
@@ -155,7 +155,7 @@ cd TEMPLATE/wiki && ../../scripts/lint.sh
 
 - [ ] 所有新增页面包含完整 frontmatter
 - [ ] source 路径指向 archive/ 中的实际文件
-- [ ] 运行 `lint.sh` 无错误
+- [ ] 使用 wiki-lint skill 检查无错误
 - [ ] 代码/文档符合项目规范
 - [ ] 更新相关文档（README.md, WIKI.md 等）
 

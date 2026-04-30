@@ -9,7 +9,7 @@
 | `obsidian-wiki` | 创建/初始化 Wiki | 运行 install.bat/sh |
 | `docs-ingest` | 摄取文档、整理资料 | Phase 1-5 流程 |
 | `wiki-query` | 查询、解释、搜索 | Wiki-First + 答案写回 |
-| `wiki-lint` | 健康检查、维护 | `bash scripts/lint.sh` |
+| `wiki-lint` | 健康检查、维护 | wiki-lint skill |
 | `wiki-capture` | 记录经验、沉淀知识 | 会话内容捕获 |
 | `learning-tracker` | 学习追踪、智能推荐 | record/analyze/recommend |
 
@@ -32,12 +32,8 @@ updated: YYYY-MM-DD        # (必需)
 # 初始化 Wiki
 /path/to/obsidian-wiki/TEMPLATE/scripts/install.sh
 
-# 健康检查
-cd wiki && ../scripts/lint.sh
-
-# 记录学习
-../learning-tracker/tracker.sh record "topic" 3
-../learning-tracker/tracker.sh analyze
+# 健康检查（使用 wiki-lint skill）
+# 直接调用 wiki-lint skill，无需手动运行脚本
 ```
 
 ## 目录用途

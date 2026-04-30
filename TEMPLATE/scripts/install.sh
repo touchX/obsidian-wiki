@@ -67,6 +67,8 @@ install_skill "$SKILL_ROOT/wiki-query/SKILL.md" "$PROJECT_DIR/.claude/skills/wik
 echo "[安装] wiki-lint skill..."
 mkdir -p "$PROJECT_DIR/.claude/skills/wiki-lint"
 install_skill "$SKILL_ROOT/wiki-lint/SKILL.md" "$PROJECT_DIR/.claude/skills/wiki-lint/SKILL.md"
+install_skill "$SKILL_ROOT/wiki-lint/lint.sh" "$PROJECT_DIR/.claude/skills/wiki-lint/lint.sh"
+chmod +x "$PROJECT_DIR/.claude/skills/wiki-lint/lint.sh"
 
 echo "[安装] wiki-capture skill..."
 mkdir -p "$PROJECT_DIR/.claude/skills/wiki-capture"
@@ -74,15 +76,11 @@ install_skill "$SKILL_ROOT/wiki-capture/SKILL.md" "$PROJECT_DIR/.claude/skills/w
 
 echo "[安装] learning-tracker skill..."
 mkdir -p "$PROJECT_DIR/.claude/skills/learning-tracker"
+install_skill "$SKILL_ROOT/learning-tracker/SKILL.md" "$PROJECT_DIR/.claude/skills/learning-tracker/SKILL.md"
 install_skill "$SKILL_ROOT/learning-tracker/tracker.sh" "$PROJECT_DIR/.claude/skills/learning-tracker/tracker.sh"
+chmod +x "$PROJECT_DIR/.claude/skills/learning-tracker/tracker.sh"
 install_skill "$SKILL_ROOT/learning-tracker/analyzer.sh" "$PROJECT_DIR/.claude/skills/learning-tracker/analyzer.sh"
-
-echo "[安装] lint.sh..."
-if [ ! -d "$PROJECT_DIR/scripts" ]; then
-    mkdir -p "$PROJECT_DIR/scripts"
-fi
-install_skill "$SKILL_ROOT/wiki-lint/lint.sh" "$PROJECT_DIR/scripts/lint.sh"
-chmod +x "$PROJECT_DIR/scripts/lint.sh"
+chmod +x "$PROJECT_DIR/.claude/skills/learning-tracker/analyzer.sh"
 
 echo ""
 echo "========================================="
@@ -96,9 +94,6 @@ echo "    - wiki-query"
 echo "    - wiki-lint"
 echo "    - wiki-capture"
 echo "    - learning-tracker"
-echo ""
-echo "  已安装的工具:"
-echo "    - scripts/lint.sh"
 echo ""
 echo "  使用方法:"
 echo "    1. 重启 Claude Code"

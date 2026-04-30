@@ -28,10 +28,8 @@ description: Wiki 健康检查与知识演化技能。当用户要求检查 Wiki
 
 ## 运行方式
 
-**使用 lint 脚本**:
-```bash
-cd wiki && ../scripts/lint.sh
-```
+**使用 wiki-lint skill**:
+直接调用 wiki-lint skill，脚本由 skill 内部调用，对用户透明。
 
 **矛盾检测**（LLM 辅助，脚本无法自动完成）:
 ```bash

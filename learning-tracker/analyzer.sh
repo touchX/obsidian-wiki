@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Learning Analyzer — 分析用户学习行为，生成推荐和路径
-# 使用方法: cd wiki && ../learning-tracker/analyzer.sh [command]
+# Learning Analyzer — 内部使用（由 learning-tracker skill 调用）
+# 不应直接调用，通过 learning-tracker skill 使用
 
 set -euo pipefail
 

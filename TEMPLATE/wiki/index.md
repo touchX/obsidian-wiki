@@ -31,7 +31,7 @@ confidence: high
 1. **添加知识**: 将文档放入 `raw/` 目录
 2. **使用 Ingest**: 使用 docs-ingest skill 摄取
 3. **查询**: 搜索相关页面获取知识
-4. **维护**: 定期运行 `scripts/lint.sh`
+4. **维护**: 定期使用 wiki-lint skill 检查健康
 
 ## 相关资源
 

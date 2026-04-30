@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Learning Tracker — 用户学习活动追踪
-# 用于记录用户的查询主题、频率、知识缺口，生成推荐
+# Learning Tracker — 内部使用（由 learning-tracker skill 调用）
+# 不应直接调用，通过 learning-tracker skill 使用
 #
-# 使用方法:
-#   tracker.sh record <topic> [difficulty]    # 记录查询
-#   tracker.sh analyze                        # 分析并生成推荐
-#   tracker.sh recommend                      # 获取推荐
-#   tracker.sh init                           # 初始化追踪文件
+# 内部命令:
+#   record <topic> [difficulty]    # 记录查询
+#   analyze                        # 分析并生成推荐
+#   recommend                      # 获取推荐
+#   init                           # 初始化追踪文件
 
 set -euo pipefail
 

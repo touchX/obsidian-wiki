@@ -43,11 +43,9 @@ cp ~/documents/research-notes.md raw/
 
 ### Step 4: 维护
 
-定期运行健康检查：
+定期使用 wiki-lint skill 进行健康检查。
 
-```bash
-cd wiki && ../scripts/lint.sh
-```
+## 下一步
 
 ## 下一步
 
