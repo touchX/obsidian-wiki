@@ -177,7 +177,7 @@ update_knowledge_graph() {
     fi
 
     # 使用 awk 替换表格和最近探索内容
-    awk -v rows="$table_rows" -v recent="$recent_list" -v date="$today" '
+    awk -v rows="$table_rows" -v recent="$recent_list" '
     /^---$/ { if (!header_done) { print; getline; print; header_done=1; next } }
     /\| \(待填充\) \|/ { print rows; next }
     /^- \(暂无数据\)$/ { matched_recent=1; print recent; next }
@@ -185,15 +185,12 @@ update_knowledge_graph() {
     END { if (matched_recent) print "" }
     ' "$LEARNING_WIKI_DIR/knowledge-graph.md" > "$LEARNING_WIKI_DIR/knowledge-graph.md.tmp" 2>/dev/null || true
 
-    # 更新 updated 字段
-    sed -i "s/updated: {{DATE}}/updated: $today/" "$LEARNING_WIKI_DIR/knowledge-graph.md" 2>/dev/null || true
-
     # 如果 awk 成功，用临时文件替换
     if [ -f "$LEARNING_WIKI_DIR/knowledge-graph.md.tmp" ] && [ -s "$LEARNING_WIKI_DIR/knowledge-graph.md.tmp" ]; then
         mv "$LEARNING_WIKI_DIR/knowledge-graph.md.tmp" "$LEARNING_WIKI_DIR/knowledge-graph.md"
     fi
 
-    # 确保 updated 字段被更新
+    # 更新 updated 字段
     sed -i "s/updated:.*/updated: $today/" "$LEARNING_WIKI_DIR/knowledge-graph.md" 2>/dev/null || true
 
     log_info "已更新知识图谱"

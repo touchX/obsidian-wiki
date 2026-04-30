@@ -116,11 +116,11 @@ record_query() {
     # 先构建新条目，然后与现有 recent_topics 合并去重
     local new_topic_entry="{\"topic\":\"$normalized_topic\",\"timestamp\":$current_time}"
     local recent=$(echo "$new_topic_freq" | jq --argjson n "$new_topic_entry" '
-        .recent_topics as $existing
-        | ($existing // []) as $prev
-        | ([$n] + $prev) as $combined
-        | $combined | unique_by(.topic) | .[0:10]
-        | .recent_topics = .')
+        .recent_topics |= (
+            ([$n] + (.recent_topics // []))
+            | unique_by(.topic)
+            | .[0:10]
+        )')
 
     # 更新学习连续天数
     local last_active_date=$(echo "$recent" | jq -r '.last_active // empty')
@@ -149,11 +149,11 @@ record_query() {
     # 处理 weak_areas: 当 difficulty >= 4 时更新
     local with_weak_areas="$with_streak"
     if [ "$difficulty" -ge 4 ]; then
-        # 检查是否已在 weak_areas 中
-        local existing_weak=$(echo "$with_streak" | jq --arg t "$normalized_topic" '
-            .weak_areas[] | select(.topic == $t)')
+        # 检查是否已在 weak_areas 中（使用数组长度判断更可靠）
+        local existing_count=$(echo "$with_streak" | jq --arg t "$normalized_topic" '
+            [.weak_areas[] | select(.topic == $t)] | length')
 
-        if [ -n "$existing_weak" ]; then
+        if [ "$existing_count" -gt 0 ]; then
             # 更新已有条目
             with_weak_areas=$(echo "$with_streak" | jq --arg t "$normalized_topic" --argjson d "$difficulty" '
                 .weak_areas |= map(
