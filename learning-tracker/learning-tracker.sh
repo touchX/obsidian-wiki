@@ -193,7 +193,6 @@ update_wiki_page_query() {
 
     # 查找匹配的 Wiki 页面
     local page_path=""
-    local slug=""
 
     # 搜索概念页面
     # 策略：优先按文件名匹配（文件名通常是 normalized_topic 格式）

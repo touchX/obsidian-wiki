@@ -219,12 +219,24 @@ update_recommendations() {
     if [ -n "$freq_topics" ]; then
         while IFS= read -r topic; do
             [ -z "$topic" ] && continue
-            # 检查是否有对应的 Wiki 页面
+            # 检查是否有对应的 Wiki 页面（使用与 update_wiki_page_query 一致的匹配逻辑）
             local has_page=false
             for dir in concepts entities sources synthesis guides tips tutorial; do
-                if [ -d "$WIKI_DIR/$dir" ] && find "$WIKI_DIR/$dir" -name "*.md" -type f 2>/dev/null | xargs grep -l "^name:.*$topic" 2>/dev/null | grep -q .; then
-                    has_page=true
-                    break
+                if [ -d "$WIKI_DIR/$dir" ]; then
+                    # 1. 先尝试精确匹配文件名
+                    if find "$WIKI_DIR/$dir" -name "*.md" -type f 2>/dev/null | xargs -I{} basename "{}" .md 2>/dev/null | grep -qxF "$topic"; then
+                        has_page=true
+                        break
+                    fi
+                    # 2. fallback: 模糊匹配 name 字段（规范化后对比）
+                    if find "$WIKI_DIR/$dir" -name "*.md" -type f 2>/dev/null | while read f; do
+                        local name_val=$(grep "^name:" "$f" 2>/dev/null | head -1 | sed 's/name: *//i' | tr -d ' ')
+                        local norm_name=$(echo "$name_val" | tr '[:upper:]' '[:lower]' | sed 's/[^a-z0-9-]/-/g')
+                        [ "$norm_name" = "$topic" ] && echo "$f"
+                    done | grep -q . 2>/dev/null; then
+                        has_page=true
+                        break
+                    fi
                 fi
             done
 
