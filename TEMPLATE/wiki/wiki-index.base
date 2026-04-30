@@ -1,0 +1,56 @@
+filters:
+  and:
+    - file.inFolder("wiki")
+    - 'file.ext == "md"'
+formulas:
+  age: '(now() - file.ctime).days'
+  updated_ago: '(now() - file.mtime).days'
+properties:
+  type:
+    displayName: "类型"
+  description:
+    displayName: "描述"
+  formula.age:
+    displayName: "创建天数"
+  formula.updated_ago:
+    displayName: "更新天数"
+  status:
+    displayName: "状态"
+views:
+  - type: table
+    name: "按类型浏览"
+    order:
+      - file.name
+      - type
+      - description
+      - status
+      - formula.updated_ago
+    groupBy:
+      property: type
+      direction: ASC
+    summaries:
+      formula.age: Average
+  - type: table
+    name: "最近更新"
+    limit: 20
+    order:
+      - file.name
+      - type
+      - formula.updated_ago
+  - type: table
+    name: "需要关注"
+    filters:
+      or:
+        - 'status == "challenged"'
+        - 'status == "draft"'
+    order:
+      - file.name
+      - type
+      - status
+      - formula.age
+  - type: cards
+    name: "知识卡片"
+    order:
+      - file.name
+      - description
+      - type

@@ -1,0 +1,13 @@
+# IDE
+.claude/
+
+# Logs
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp
+*.tmp
+*.temp
