@@ -5,7 +5,7 @@
 # 使用方法:
 #   cd your-project && /path/to/obsidian-wiki/TEMPLATE/scripts/install.sh
 
-set -e  # 遇到错误立即退出
+set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="$(dirname "$SCRIPT_DIR")"

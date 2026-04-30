@@ -139,8 +139,6 @@ Wiki skills (编排层 — 知识复利引擎)
 │   └── sources/        # 源文件归档（不可变）
 ├── raw/                # 临时待处理文件
 │   └── notes/          # 会话捕获笔记
-├── scripts/            # 工具脚本
-│   └── lint.sh       # 健康检查
 └── wiki/               # Wiki 知识库
     ├── WIKI.md         # Schema 规范
     ├── wiki-index.base # Bases 动态索引视图

@@ -75,12 +75,11 @@ init_tracker() {
 }
 EOF
         log_info "已初始化用户活动追踪: $USER_ACTIVITY_FILE"
+        # 初始化 learning tracker Wiki 目录结构
+        init_learning_structure_from_tracker
     else
         log_info "追踪文件已存在: $USER_ACTIVITY_FILE"
     fi
-
-    # 同时初始化 learning tracker Wiki 目录结构
-    init_learning_structure_from_tracker
 }
 
 # 获取当前日期
@@ -110,7 +109,7 @@ record_query() {
     local current_time=$(get_timestamp)
 
     # 规范化 topic（保留中文、字母、数字、连字符）
-    local normalized_topic=$(echo "$topic" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9一-鿿一-龥-]/-/g; s/-+/-/g; s/^-//; s/-$//')
+    local normalized_topic=$(echo "$topic" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9一-鿿-]/-/g; s/-+/-/g; s/^-//; s/-$//')
 
     # 读取现有数据
     local existing_data=$(cat "$USER_ACTIVITY_FILE")
@@ -217,6 +216,17 @@ record_query() {
     log_info "已记录查询: $normalized_topic (频率: $new_freq, 难度: $difficulty, 连续: $new_streak 天)"
 }
 
+# 在 frontmatter 第二个 --- 前插入一行（跨平台兼容，替代 sed \n）
+insert_in_frontmatter() {
+    local file="$1"
+    local line="$2"
+    local tmp="${file}.tmp.$$"
+    awk -v ins="$line" '
+        /^---$/ { count++; if (count == 2) print ins }
+        { print }
+    ' "$file" > "$tmp" && mv "$tmp" "$file"
+}
+
 # 更新 Wiki 页面的 query_count
 update_wiki_page_query() {
     local topic="$1"
@@ -286,7 +296,7 @@ update_wiki_page_query() {
         sed_inplace "s/^query_count:.*/query_count: $new_count/" "$page_path"
     else
         # 在第二个 --- 行之前插入（frontmatter 内部）
-        sed_inplace "0,/^---$/! {0,/^---$/ {s/^---$/query_count: 1\n---/}}" "$page_path"
+        insert_in_frontmatter "$page_path" "query_count: 1"
     fi
 
     # 更新 last_queried
@@ -294,7 +304,7 @@ update_wiki_page_query() {
         sed_inplace "s/^last_queried:.*/last_queried: $current_date/" "$page_path"
     else
         # 在第二个 --- 行之前插入
-        sed_inplace "0,/^---$/! {0,/^---$/ {s/^---$/last_queried: $current_date\n---/}}" "$page_path"
+        insert_in_frontmatter "$page_path" "last_queried: $current_date"
     fi
 }
 
