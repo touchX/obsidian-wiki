@@ -142,100 +142,151 @@ update_knowledge_graph() {
     local total=$(echo "$data" | jq '.total_queries // 0')
     local streak=$(echo "$data" | jq '.learning_streak // 0')
     local last_active=$(echo "$data" | jq -r '.last_active // "暂无"')
+    local today=$(date '+%Y-%m-%d')
 
-    # 生成主题表格
-    local topic_table=$(echo "$data" | jq -r '
+    # 检查文件是否存在
+    if [ ! -f "$LEARNING_WIKI_DIR/knowledge-graph.md" ]; then
+        log_warn "知识图谱文件不存在，跳过更新"
+        return
+    fi
+
+    # 生成主题表格行
+    local table_rows=$(echo "$data" | jq -r '
         .topic_frequencies as $freq
         | $freq | to_entries
         | sort_by(.value) | reverse
         | .[0:10]
         | map("| \(.key) | \(.value) | (待分析) | 学习中 |")
         | join("\n")
-    ')
+    ' 2>/dev/null)
 
-    # 最近探索
-    local recent_topics=$(echo "$data" | jq -r '
-        .recent_topics[:5] // []
-        | map("- [[\(.)]]") | join("\n")
-    ')
-
-    # 替换占位符
-    if [ -f "$LEARNING_WIKI_DIR/knowledge-graph.md" ]; then
-        local today=$(date '+%Y-%m-%d')
-
-        # 使用更精确的 sed 替换
-        sed -i "s/| (待填充) |/$(echo "$topic_table" | head -1 || echo '| (暂无数据) |')/g" "$LEARNING_WIKI_DIR/knowledge-graph.md" 2>/dev/null || true
-
-        # 更新最近探索
-        if [ "$recent_topics" != "" ]; then
-            sed -i "s/- (暂无数据)/$(echo "$recent_topics" | head -5)/g" "$LEARNING_WIKI_DIR/knowledge-graph.md" 2>/dev/null || true
-        fi
-
-        # 更新元数据
-        sed -i "s/updated: {{DATE}}/updated: $today/g" "$LEARNING_WIKI_DIR/knowledge-graph.md" 2>/dev/null || true
-
-        log_info "已更新知识图谱"
+    # 如果没有数据，使用占位符
+    if [ -z "$table_rows" ]; then
+        table_rows="| (暂无数据) | | | |"
     fi
+
+    # 生成最近探索列表 (正确格式: - [[topic-name]])
+    local recent_list=$(echo "$data" | jq -r '
+        .recent_topics[:5] // []
+        | map("- [[\(.topic)]]")
+        | join("\n")
+    ' 2>/dev/null)
+
+    if [ -z "$recent_list" ]; then
+        recent_list="- (暂无数据)"
+    fi
+
+    # 使用 awk 替换表格和最近探索内容
+    awk -v rows="$table_rows" -v recent="$recent_list" -v date="$today" '
+    /^---$/ { if (!header_done) { print; getline; print; header_done=1; next } }
+    /\| \(待填充\) \|/ { print rows; next }
+    /^- \(暂无数据\)$/ { matched_recent=1; print recent; next }
+    { if (!matched_recent) print }
+    END { if (matched_recent) print "" }
+    ' "$LEARNING_WIKI_DIR/knowledge-graph.md" > "$LEARNING_WIKI_DIR/knowledge-graph.md.tmp" 2>/dev/null || true
+
+    # 更新 updated 字段
+    sed -i "s/updated: {{DATE}}/updated: $today/" "$LEARNING_WIKI_DIR/knowledge-graph.md" 2>/dev/null || true
+
+    # 如果 awk 成功，用临时文件替换
+    if [ -f "$LEARNING_WIKI_DIR/knowledge-graph.md.tmp" ] && [ -s "$LEARNING_WIKI_DIR/knowledge-graph.md.tmp" ]; then
+        mv "$LEARNING_WIKI_DIR/knowledge-graph.md.tmp" "$LEARNING_WIKI_DIR/knowledge-graph.md"
+    fi
+
+    # 确保 updated 字段被更新
+    sed -i "s/updated:.*/updated: $today/" "$LEARNING_WIKI_DIR/knowledge-graph.md" 2>/dev/null || true
+
+    log_info "已更新知识图谱"
 }
 
 # 更新推荐页面
 update_recommendations() {
     check_jq
     local data=$(read_user_data)
+    local today=$(date '+%Y-%m-%d')
+
+    # 检查文件是否存在
+    if [ ! -f "$LEARNING_WIKI_DIR/recommendations.md" ]; then
+        log_warn "推荐页面文件不存在，跳过更新"
+        return
+    fi
 
     # 分析高频但未深入的主题（频率>3但没有对应Wiki页面）
-    local high_freq_low_depth=""
-    echo "$data" | jq -r '
+    local high_freq_lines=""
+    local freq_topics=$(echo "$data" | jq -r '
         .topic_frequencies | to_entries
         | sort_by(.value) | reverse
-        | .[] | select(.value > 3)
-        | .key
-    ' 2>/dev/null | while read -r topic; do
-        # 检查是否有对应的 Wiki 页面
-        local has_page=false
-        for dir in concepts entities sources synthesis; do
-            if find "$WIKI_DIR/$dir" -name "*.md" -type f 2>/dev/null | xargs grep -l "^name:.*$topic" 2>/dev/null | grep -q .; then
-                has_page=true
-                break
-            fi
-        done
+        | .[] | select(.value > 3) | .key
+    ' 2>/dev/null)
 
-        if [ "$has_page" = false ]; then
-            high_freq_low_depth="$high_freq_low_depth\n- [[$topic]] — 高频查询但 Wiki 中无相关概念页"
-        fi
-    done
+    if [ -n "$freq_topics" ]; then
+        while IFS= read -r topic; do
+            [ -z "$topic" ] && continue
+            # 检查是否有对应的 Wiki 页面
+            local has_page=false
+            for dir in concepts entities sources synthesis; do
+                if [ -d "$WIKI_DIR/$dir" ] && find "$WIKI_DIR/$dir" -name "*.md" -type f 2>/dev/null | xargs grep -l "^name:.*$topic" 2>/dev/null | grep -q .; then
+                    has_page=true
+                    break
+                fi
+            done
+
+            if [ "$has_page" = false ]; then
+                high_freq_lines="$high_freq_lines- [[$topic]] — 高频查询但 Wiki 中无相关概念页"$'\n'
+            fi
+        done <<< "$freq_topics"
+    fi
+
+    # 如果没有数据，使用占位符
+    if [ -z "$high_freq_lines" ]; then
+        high_freq_lines="- (暂无数据)"
+    fi
 
     # 分析遗忘主题（7天未访问）
-    local current_time=$(date '+%s')
-    local forgot_topics=""
-    echo "$data" | jq -r '.recent_topics[] | @json' 2>/dev/null | while read -r entry; do
-        local topic=$(echo "$entry" | jq -r '.topic')
-        local ts=$(echo "$entry" | jq -r '.timestamp')
-        local days_since=$(( (current_time - ts) / 86400 ))
-        if [ "$days_since" -ge 7 ]; then
-            forgot_topics="$forgot_topics\n- [[$topic]] — $days_since 天前查询，建议复习"
-        fi
-    done
+    local forgot_lines=""
+    local recent_json=$(echo "$data" | jq -r '.recent_topics[] | @json' 2>/dev/null)
 
-    # 更新推荐页面
-    if [ -f "$LEARNING_WIKI_DIR/recommendations.md" ]; then
-        local today=$(date '+%Y-%m-%d')
-
-        # 替换高频但未深入部分
-        if [ -n "$high_freq_low_depth" ]; then
-            sed -i "s/- (分析后填充)/$(echo "$high_freq_low_depth" | tail -5)/g" "$LEARNING_WIKI_DIR/recommendations.md" 2>/dev/null || true
-        fi
-
-        # 替换遗忘复习部分
-        if [ -n "$forgot_topics" ]; then
-            sed -i "s/- (超过 7 天未访问的主题)/$(echo "$forgot_topics" | tail -5)/g" "$LEARNING_WIKI_DIR/recommendations.md" 2>/dev/null || true
-        fi
-
-        # 更新时间
-        sed -i "s/updated: {{DATE}}/updated: $today/g" "$LEARNING_WIKI_DIR/recommendations.md" 2>/dev/null || true
-
-        log_info "已更新推荐页面"
+    if [ -n "$recent_json" ]; then
+        while IFS= read -r entry; do
+            [ -z "$entry" ] && continue
+            local topic=$(echo "$entry" | jq -r '.topic' 2>/dev/null)
+            local ts=$(echo "$entry" | jq -r '.timestamp' 2>/dev/null)
+            if [ -n "$topic" ] && [ -n "$ts" ]; then
+                local days_since=$(( ( $(date '+%s') - ts ) / 86400 ))
+                if [ "$days_since" -ge 7 ]; then
+                    forgot_lines="$forgot_lines- [[$topic]] — $days_since 天前查询，建议复习"$'\n'
+                fi
+            fi
+        done <<< "$recent_json"
     fi
+
+    if [ -z "$forgot_lines" ]; then
+        forgot_lines="- (暂无数据)"
+    fi
+
+    # 构建更新后的文件内容
+    local temp_file="$LEARNING_WIKI_DIR/recommendations.md.tmp"
+    local in_placeholder=false
+    local placeholder_type=""
+
+    while IFS= read -r line; do
+        # 检测占位符
+        if echo "$line" | grep -q "^- (分析后填充)$"; then
+            echo "$high_freq_lines" | sed 's/\\n/\n/g' >> "$temp_file"
+            continue
+        fi
+        if echo "$line" | grep -q "^- (超过 7 天未访问的主题)$"; then
+            echo "$forgot_lines" | sed 's/\\n/\n/g' >> "$temp_file"
+            continue
+        fi
+
+        # 更新 updated 字段
+        echo "$line" | sed "s/updated: {{DATE}}/updated: $today/" >> "$temp_file"
+    done < "$LEARNING_WIKI_DIR/recommendations.md"
+
+    mv "$temp_file" "$LEARNING_WIKI_DIR/recommendations.md" 2>/dev/null || true
+
+    log_info "已更新推荐页面"
 }
 
 # 生成会话结束报告

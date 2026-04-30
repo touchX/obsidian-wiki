@@ -86,7 +86,7 @@ record_query() {
     local current_time=$(get_timestamp)
 
     # 规范化 topic（转小写，移除特殊字符）
-    local normalized_topic=$(echo "$topic" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g')
+    local normalized_topic=$(echo "$topic" | tr '[:upper:]' '[:lower]' | sed 's/[^a-z0-9-]/-/g')
 
     # 读取现有数据
     local existing_data=$(cat "$USER_ACTIVITY_FILE")
@@ -113,17 +113,67 @@ record_query() {
     fi
 
     # 更新最近主题（保留最后 10 个）
-    local recent=$(echo "$new_topic_freq" | jq --arg t "$normalized_topic" --arg ts "$current_time" \
-        '(.recent_topics = ([{topic: $t, timestamp: ($ts | tonumber)}] + .recent_topics) | unique_by(.topic) | .[0:10])')
+    # 先构建新条目，然后与现有 recent_topics 合并去重
+    local new_topic_entry="{\"topic\":\"$normalized_topic\",\"timestamp\":$current_time}"
+    local recent=$(echo "$new_topic_freq" | jq --argjson n "$new_topic_entry" '
+        .recent_topics as $existing
+        | ($existing // []) as $prev
+        | ([$n] + $prev) as $combined
+        | $combined | unique_by(.topic) | .[0:10]
+        | .recent_topics = .')
 
-    # 增加学习连续天数
-    local last_active=$(echo "$recent" | jq -r '.last_active // empty')
-    local learning_streak=$(echo "$recent" | jq '.learning_streak // 0')
+    # 更新学习连续天数
+    local last_active_date=$(echo "$recent" | jq -r '.last_active // empty')
+    local current_streak=$(echo "$recent" | jq '.learning_streak // 0')
+
+    # 计算日期差异
+    local new_streak=1  # 默认从1开始
+    if [ -n "$last_active_date" ]; then
+        local last_ts=$(date -d "$last_active_date" '+%s' 2>/dev/null || echo 0)
+        local diff=$(( (current_time - last_ts) / 86400 ))
+        if [ "$diff" -eq 0 ]; then
+            # 同一天，保持 streak
+            new_streak=$current_streak
+        elif [ "$diff" -eq 1 ]; then
+            # 昨天，连续+1
+            new_streak=$((current_streak + 1))
+        else
+            # 超过1天，重新计算
+            new_streak=1
+        fi
+    fi
+
+    # 更新 learning_streak
+    local with_streak=$(echo "$recent" | jq --argjson s "$new_streak" '.learning_streak = $s')
+
+    # 处理 weak_areas: 当 difficulty >= 4 时更新
+    local with_weak_areas="$with_streak"
+    if [ "$difficulty" -ge 4 ]; then
+        # 检查是否已在 weak_areas 中
+        local existing_weak=$(echo "$with_streak" | jq --arg t "$normalized_topic" '
+            .weak_areas[] | select(.topic == $t)')
+
+        if [ -n "$existing_weak" ]; then
+            # 更新已有条目
+            with_weak_areas=$(echo "$with_streak" | jq --arg t "$normalized_topic" --argjson d "$difficulty" '
+                .weak_areas |= map(
+                    if .topic == $t then
+                        .count += 1 |
+                        .avg_difficulty = ((.avg_difficulty * (.count - 1) + $d) / .count)
+                    else . end
+                )')
+        else
+            # 添加新条目
+            local weak_entry="{\"topic\":\"$normalized_topic\",\"count\":1,\"avg_difficulty\":$difficulty}"
+            with_weak_areas=$(echo "$with_streak" | jq --argjson w "$weak_entry" \
+                '.weak_areas = ([$w] + (.weak_areas // []))')
+        fi
+    fi
 
     # 记录到历史（保留最后 100 条）
     local history_entry="{\"topic\":\"$normalized_topic\",\"difficulty\":$difficulty,\"timestamp\":$current_time,\"date\":\"$current_date\"}"
-    local new_history=$(echo "$recent" | jq --argjson e "$history_entry" \
-        '(.query_history = ([$e] + .query_history) | .[0:100])')
+    local new_history=$(echo "$with_weak_areas" | jq --argjson e "$history_entry" \
+        '.query_history = ([$e] + (.query_history // [])) | .[0:100]')
 
     # 保存更新
     echo "$new_history" > "$USER_ACTIVITY_FILE"
@@ -131,7 +181,7 @@ record_query() {
     # 同时更新 Wiki 页面的 frontmatter
     update_wiki_page_query "$normalized_topic" "$current_date"
 
-    log_info "已记录查询: $normalized_topic (频率: $new_freq, 难度: $difficulty)"
+    log_info "已记录查询: $normalized_topic (频率: $new_freq, 难度: $difficulty, 连续: $new_streak 天)"
 }
 
 # 更新 Wiki 页面的 query_count
