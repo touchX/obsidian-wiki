@@ -30,6 +30,7 @@ npm ls -g defuddle          # 网页提取
 | `wiki-query` | 知识复利查询 | Wiki-First + 答案写回 |
 | `wiki-lint` | 健康与演化检查 | 矛盾/孤立/缺口检测 |
 | `wiki-capture` | 会话知识捕获 | 高价值内容沉淀 |
+| `learning-tracker` | 智能学习追踪 | 主题频率、缺口分析、个性化推荐 |
 
 ## 渐进式复杂度
 
@@ -56,9 +57,10 @@ obsidian-skills (底层 — 组合使用，不重写)
         ↓
 Wiki skills (编排层 — 知识复利引擎)
 ├── docs-ingest         → 1:N 多页综合摄取
-├── wiki-query          → 查询 + 答案写回
+├── wiki-query          → 查询 + 答案写回 + 学习追踪
 ├── wiki-lint           → 健康检查 + 知识演化
-└── wiki-capture        → 会话知识捕获
+├── wiki-capture        → 会话知识捕获
+└── learning-tracker    → 用户画像 + 频率统计 + 推荐
 ```
 
 ## 使用流程
@@ -92,6 +94,39 @@ Wiki skills (编排层 — 知识复利引擎)
 使用 wiki-capture skill
 会话结束前捕获高价值内容
 ```
+
+### Step 6: 学习追踪（可选，自动运行）
+```
+使用 wiki-query 时自动追踪
+调用 learning-tracker.sh record 记录主题
+会话结束调用 analyzer.sh analyze 生成推荐
+```
+
+## 智能学习进化（Learning Tracker）
+
+本系统具备持续智能进化能力，越用越了解用户：
+
+| 功能 | 说明 |
+|------|------|
+| **主题频率追踪** | 记录用户查询的主题和频率 |
+| **知识缺口分析** | 识别高频但未深入的主题 |
+| **遗忘提醒** | 超过 7 天未访问的主题主动提醒 |
+| **智能推荐** | 基于查询历史推荐相关知识 |
+| **学习路径** | 构建从浅到深的主题探索顺序 |
+
+### 数据存储
+
+- **轻量层**: `config/user-activity.json` — 频率统计、活跃度
+- **Wiki 层**: frontmatter — query_count、last_queried、learning_path
+- **图谱层**: `wiki/synthesis/user-learning/` — 知识关系、学习路径
+
+### 触发场景
+
+| 场景 | 系统响应 |
+|------|----------|
+| 用户连续问 3+ 个相关问题 | 提议创建该主题概念页 |
+| 询问高频但无 Wiki 页面的话题 | 建议建立相关概念页 |
+| 超过 7 天未问某曾问过主题 | 主动提议复习 |
 
 ## 目录结构
 
@@ -132,6 +167,11 @@ updated: YYYY-MM-DD
 source: ../../archive/sources/filename.md
 status: draft | stable | challenged | superseded
 confidence: low | medium | high
+# --- 智能进化字段（可选） ---
+query_count: 0           # 被查询次数
+last_queried: YYYY-MM-DD  # 最后查询时间
+difficulty_level: 3      # 1-5，用户理解难度
+learning_path: next       # prev/next/core，学习顺序
 ---
 ```
 

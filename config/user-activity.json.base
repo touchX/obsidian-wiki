@@ -1,0 +1,13 @@
+{
+  "_comment": "用户学习活动追踪 - 轻量积分系统",
+  "schema_version": "1.0",
+  "user_id": "default",
+  "last_active": "",
+  "created": "",
+  "topic_frequencies": {},
+  "weak_areas": [],
+  "learning_streak": 0,
+  "total_queries": 0,
+  "query_history": [],
+  "recent_topics": []
+}

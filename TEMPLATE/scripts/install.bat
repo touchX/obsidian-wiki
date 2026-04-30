@@ -78,6 +78,12 @@ echo [安装] wiki-capture skill...
 if not exist "%PROJECT_DIR%\.claude\skills\wiki-capture" mkdir "%PROJECT_DIR%\.claude\skills\wiki-capture"
 call :install_skill "inspool\SKILL.md" "%PROJECT_DIR%\.claude\skills\wiki-capture\SKILL.md"
 
+echo [安装] learning-tracker skill...
+if not exist "%PROJECT_DIR%\.claude\skills\learning-tracker" mkdir "%PROJECT_DIR%\.claude\skills\learning-tracker"
+call :install_skill "learning-tracker\learning-tracker.sh" "%PROJECT_DIR%\.claude\skills\learning-tracker\learning-tracker.sh"
+call :install_skill "learning-tracker\analyzer.sh" "%PROJECT_DIR%\.claude\skills\learning-tracker\analyzer.sh"
+call :install_skill "config\user-activity.json.base" "%PROJECT_DIR%\.claude\skills\learning-tracker\config\user-activity.json.base"
+
 REM 复制 wiki-lint.sh 到 scripts 目录
 if not exist "%PROJECT_DIR%\scripts" mkdir "%PROJECT_DIR%\scripts"
 copy /Y "scripts\wiki-lint.sh" "%PROJECT_DIR%\scripts\wiki-lint.sh" >nul 2>&1
@@ -94,6 +100,7 @@ echo    - docs-ingest
 echo    - wiki-query
 echo    - wiki-lint
 echo    - wiki-capture ^(原 inspool^)
+echo    - learning-tracker ^(| 智能学习追踪^)
 echo.
 echo  使用方法:
 echo    1. 重启 Claude Code
