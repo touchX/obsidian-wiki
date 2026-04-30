@@ -91,17 +91,19 @@ record_query() {
     # 读取现有数据
     local existing_data=$(cat "$USER_ACTIVITY_FILE")
 
-    # 更新总查询数
-    local total_queries=$(echo "$existing_data" | jq '.total_queries // 0')
-    total_queries=$((total_queries + 1))
-
-    # 更新主题频率
+    # 获取当前频率并计算新频率
     local current_freq=$(echo "$existing_data" | jq -r --arg t "$normalized_topic" '.topic_frequencies[$t] // 0')
     local new_freq=$((current_freq + 1))
 
-    # 构建新的 topic_frequencies
-    local new_topic_freq=$(echo "$existing_data" | jq --arg t "$normalized_topic" --arg v "$new_freq" \
-        '.topic_frequencies[$t] = ($v | tonumber)')
+    # 获取当前 total_queries
+    local current_total=$(echo "$existing_data" | jq '.total_queries // 0')
+
+    # 在单次 jq 调用中更新 topic_frequencies 和 total_queries
+    local new_topic_freq=$(echo "$existing_data" | jq \
+        --arg t "$normalized_topic" \
+        --argjson v "$new_freq" \
+        --argjson total "$((current_total + 1))" \
+        '.topic_frequencies[$t] = $v | .total_queries = $total')
 
     # 更新 last_active
     new_topic_freq=$(echo "$new_topic_freq" | jq --arg d "$current_date" '.last_active = $d')

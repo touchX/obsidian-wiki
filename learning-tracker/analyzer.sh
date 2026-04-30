@@ -263,8 +263,6 @@ update_recommendations() {
 
     # 构建更新后的文件内容
     local temp_file="$LEARNING_WIKI_DIR/recommendations.md.tmp"
-    local in_placeholder=false
-    local placeholder_type=""
 
     while IFS= read -r line; do
         # 检测占位符
