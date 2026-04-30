@@ -61,13 +61,14 @@ get_skill_for_mime() {
 check_skill_available() {
     local skill="$1"
 
-    # internal 和 defudder 默认可用
+    # internal 和 defuddle 默认可用
     if [[ "$skill" == "internal" ]] || [[ "$skill" == "defuddle" ]]; then
         return 0
     fi
 
     # 其他 skill 检查 SKILL.md 是否存在
-    local skill_path="../../${skill}/SKILL.md"
+    # 路径: docs-ingest/scripts/router.sh → docs-ingest/${skill}/SKILL.md
+    local skill_path="../${skill}/SKILL.md"
     if [[ -f "$skill_path" ]]; then
         return 0
     else
@@ -85,6 +86,12 @@ route_file() {
 
     if [[ ! -f "$file_path" ]]; then
         echo '{"error":"file not found"}'
+        return 1
+    fi
+
+    # 检查文件命令是否存在，不存在时降级
+    if ! command -v file &> /dev/null; then
+        echo '{"error":"file command not found"}'
         return 1
     fi
 
