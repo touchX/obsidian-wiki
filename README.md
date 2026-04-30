@@ -60,6 +60,7 @@ cd my-wiki
 | `wiki-query` | 搜索、解释、比较 | Wiki-First 原则 + 答案写回 |
 | `wiki-lint` | 健康检查、维护 | 孤立页面、矛盾、知识缺口检测 |
 | `wiki-capture` | 记录经验、沉淀知识 | 会话高价值内容捕获 |
+| `learning-tracker` | 学习追踪、智能推荐 | 主题频率、缺口分析、个性化推荐 |
 
 ## 工作流
 

@@ -114,11 +114,10 @@ wiki-query 执行流程：
 
 ## 安装
 
-通过 `install.bat` 自动安装：
+通过 `install.sh` / `install.bat` 自动安装：
 
 1. 复制 `learning-tracker.sh` 和 `analyzer.sh`
-2. 复制 `user-activity.json.base` 作为模板
-3. 更新安装完成提示
+2. 首次运行 `learning-tracker.sh init` 时自动创建 `config/user-activity.json`
 
 ## 文件清单
 

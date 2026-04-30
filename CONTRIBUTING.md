@@ -15,7 +15,8 @@ obsidian-wiki/
 ├── docs-ingest/           # 文档摄取技能
 ├── wiki-query/            # Wiki 查询技能
 ├── wiki-lint/             # 健康检查技能
-├── wiki-capture/          # 会话知识沉淀（原 inspool）
+├── wiki-capture/          # 会话知识沉淀
+├── learning-tracker/      # 学习活动追踪与分析
 └── TEMPLATE/              # 安装模板
     ├── wiki/              # Wiki 结构示例
     ├── scripts/           # 工具脚本

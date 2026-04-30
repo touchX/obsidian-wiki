@@ -2,6 +2,9 @@
 name: wiki-log
 description: Wiki 操作日志
 type: guide
+tags: [log, wiki]
+created: {{DATE}}
+updated: {{DATE}}
 ---
 
 # Wiki Log

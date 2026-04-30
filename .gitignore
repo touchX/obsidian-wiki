@@ -11,3 +11,6 @@ Thumbs.db
 # Temp
 *.tmp
 *.temp
+
+# 状态文件
+.omc/

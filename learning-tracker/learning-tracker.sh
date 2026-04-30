@@ -25,11 +25,117 @@ log_info() { echo -e "${GREEN}[INFO]${NC} $1"; }
 log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
+# 跨平台 sed -i 兼容
+sed_inplace() {
+    if sed --version &>/dev/null 2>&1; then
+        sed -i "$@"
+    else
+        sed -i '' "$@"
+    fi
+}
+
 # 确保 jq 可用
 check_jq() {
     if ! command -v jq &> /dev/null; then
         log_error "jq 未安装，请先安装: brew install jq 或 apt install jq"
         exit 1
+    fi
+}
+
+# 初始化 learning tracker Wiki 目录结构（在 learning-tracker.sh 中调用）
+init_learning_structure_from_tracker() {
+    local LEARNING_WIKI_DIR="${WIKI_DIR:-wiki}/synthesis/user-learning"
+    mkdir -p "$LEARNING_WIKI_DIR"
+
+    local today=$(date '+%Y-%m-%d')
+
+    # 创建知识图谱页
+    if [ ! -f "$LEARNING_WIKI_DIR/knowledge-graph.md" ]; then
+        cat > "$LEARNING_WIKI_DIR/knowledge-graph.md" << EOF
+---
+name: synthesis/user-learning/knowledge-graph
+description: 用户知识主题关系图谱
+type: synthesis
+tags: [learning, user-profile, knowledge-graph]
+created: $today
+updated: $today
+status: draft
+---
+
+# 知识主题关系图谱
+
+> 本页记录用户探索过的主题及其相互关系
+
+## 主题节点
+
+| 主题 | 频率 | 关联主题 | 理解深度 |
+|------|------|----------|----------|
+| (待填充) | | | |
+
+## 学习路径
+
+- (待生成)
+
+## 最近探索
+
+- (暂无数据)
+
+## 更新日志
+
+- $today: 初始化
+EOF
+        log_info "已创建: $LEARNING_WIKI_DIR/knowledge-graph.md"
+    fi
+
+    # 创建推荐页面
+    if [ ! -f "$LEARNING_WIKI_DIR/recommendations.md" ]; then
+        cat > "$LEARNING_WIKI_DIR/recommendations.md" << EOF
+---
+name: synthesis/user-learning/recommendations
+description: 用户个性化学习推荐
+type: synthesis
+tags: [learning, recommendations]
+created: $today
+updated: $today
+status: draft
+---
+
+# 学习推荐
+
+> 基于用户查询历史和知识缺口自动生成
+
+## 待探索主题
+
+### 高频但未深入
+- (分析后填充)
+
+### 遗忘复习
+- (超过 7 天未访问的主题)
+
+### 前置知识缺失
+- (用户询问的主题但缺少基础概念)
+
+## 推荐理由
+
+系统根据以下信号生成推荐:
+1. 查询频率 > 3 次但未创建概念页
+2. 连续询问相关主题（可能存在前置知识缺口）
+3. 长时间未访问曾关注的主题
+
+## 响应格式
+
+当检测到以上模式时，主动向用户提议:
+
+\`\`\`
+💡 建议: 似乎你对 [主题 A] 感兴趣，但 Wiki 中还没有相关基础概念页。
+是否要我创建一个？
+\`\`\`
+
+## 更新日志
+
+- $today: 初始化推荐系统
+EOF
+        log_info "已创建: $LEARNING_WIKI_DIR/recommendations.md"
     fi
 }
 
@@ -57,6 +163,9 @@ EOF
     else
         log_info "追踪文件已存在: $USER_ACTIVITY_FILE"
     fi
+
+    # 同时初始化 learning tracker Wiki 目录结构
+    init_learning_structure_from_tracker
 }
 
 # 获取当前日期
@@ -131,7 +240,12 @@ record_query() {
     # 计算日期差异
     local new_streak=1  # 默认从1开始
     if [ -n "$last_active_date" ]; then
-        local last_ts=$(date -d "$last_active_date" '+%s' 2>/dev/null || echo 0)
+        local last_ts
+        if date -d "$last_active_date" '+%s' &>/dev/null 2>&1; then
+            last_ts=$(date -d "$last_active_date" '+%s')
+        else
+            last_ts=$(date -j -f '%Y-%m-%d' "$last_active_date" '+%s' 2>/dev/null || echo 0)
+        fi
         local diff=$(( (current_time - last_ts) / 86400 ))
         if [ "$diff" -eq 0 ]; then
             # 同一天，保持 streak
@@ -175,7 +289,7 @@ record_query() {
     # 记录到历史（保留最后 100 条）
     local history_entry="{\"topic\":\"$normalized_topic\",\"difficulty\":$difficulty,\"timestamp\":$current_time,\"date\":\"$current_date\"}"
     local new_history=$(echo "$with_weak_areas" | jq --argjson e "$history_entry" \
-        '.query_history = ([$e] + (.query_history // [])) | .[0:100]')
+        '.query_history = (([$e] + (.query_history // [])) | .[0:100])')
 
     # 保存更新
     echo "$new_history" > "$USER_ACTIVITY_FILE"
@@ -193,36 +307,51 @@ update_wiki_page_query() {
 
     # 查找匹配的 Wiki 页面
     local page_path=""
+    local match_type=""
 
-    # 搜索概念页面
-    # 策略：优先按文件名匹配（文件名通常是 normalized_topic 格式）
-    # fallback: 扫描 name 字段进行模糊匹配
     for dir in concepts entities sources synthesis guides tips tutorial; do
         if [ -d "$WIKI_DIR/$dir" ]; then
             # 1. 先尝试精确匹配文件名（如 javascript.md → javascript）
-            local found=$(find "$WIKI_DIR/$dir" -name "*.md" -type f 2>/dev/null | while read f; do
+            local found=""
+            local match_count=0
+            while IFS= read -r f; do
                 local fname=$(basename "$f" .md)
                 if [[ "$fname" == "$topic" ]]; then
-                    echo "$f"
-                    break
+                    found="$f"
+                    match_count=$((match_count + 1))
                 fi
-            done)
+            done < <(find "$WIKI_DIR/$dir" -name "*.md" -type f 2>/dev/null)
+
+            if [ -n "$found" ] && [ "$match_count" -eq 1 ]; then
+                page_path="$found"
+                match_type="exact_filename"
+                break
+            fi
 
             # 2. 如果没找到，尝试模糊匹配 name 字段（不区分大小写）
-            if [ -z "$found" ]; then
-                found=$(find "$WIKI_DIR/$dir" -name "*.md" -type f 2>/dev/null | while read f; do
+            if [ -z "$page_path" ]; then
+                found=""
+                match_count=0
+                while IFS= read -r f; do
                     local name_val=$(grep "^name:" "$f" 2>/dev/null | head -1 | sed 's/name: *//i' | tr -d ' ')
                     # 规范化 name 字段后对比（如 JavaScript → javascript）
                     local norm_name=$(echo "$name_val" | tr '[:upper:]' '[:lower]' | sed 's/[^a-z0-9-]/-/g')
                     if [[ "$norm_name" == "$topic" ]]; then
-                        echo "$f"
-                        break
+                        found="$f"
+                        match_count=$((match_count + 1))
                     fi
-                done)
+                done < <(find "$WIKI_DIR/$dir" -name "*.md" -type f 2>/dev/null)
+
+                if [ -n "$found" ] && [ "$match_count" -eq 1 ]; then
+                    page_path="$found"
+                    match_type="name_field"
+                    break
+                elif [ "$match_count" -gt 1 ]; then
+                    log_warn "主题 '$topic' 在 $dir/ 中有 $match_count 个匹配，跳过更新"
+                fi
             fi
 
-            if [ -n "$found" ]; then
-                page_path="$found"
+            if [ -n "$page_path" ]; then
                 break
             fi
         fi
@@ -237,17 +366,17 @@ update_wiki_page_query() {
         # 更新现有值
         local current_count=$(grep "^query_count:" "$page_path" | head -1 | sed 's/query_count: *//' | tr -d ' ')
         local new_count=$((current_count + 1))
-        sed -i "s/^query_count:.*/query_count: $new_count/" "$page_path"
+        sed_inplace "s/^query_count:.*/query_count: $new_count/" "$page_path"
     else
         # 在第一个 --- 之后添加
-        sed -i "/^---$/a\\query_count: 1" "$page_path"
+        sed_inplace "1a\\query_count: 1" "$page_path"
     fi
 
     # 更新 last_queried
     if grep -q "^last_queried:" "$page_path" 2>/dev/null; then
-        sed -i "s/^last_queried:.*/last_queried: $current_date/" "$page_path"
+        sed_inplace "s/^last_queried:.*/last_queried: $current_date/" "$page_path"
     else
-        sed -i "/^---$/a\\last_queried: $current_date" "$page_path"
+        sed_inplace "1a\\last_queried: $current_date" "$page_path"
     fi
 }
 

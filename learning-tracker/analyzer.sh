@@ -22,6 +22,15 @@ log_info() { echo -e "${GREEN}[INFO]${NC} $1"; }
 log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
+# 跨平台 sed -i 兼容
+sed_inplace() {
+    if sed --version &>/dev/null 2>&1; then
+        sed -i "$@"
+    else
+        sed -i '' "$@"
+    fi
+}
+
 check_jq() {
     if ! command -v jq &> /dev/null; then
         log_error "jq 未安装"
@@ -180,9 +189,8 @@ update_knowledge_graph() {
     awk -v rows="$table_rows" -v recent="$recent_list" '
     /^---$/ { if (!header_done) { print; getline; print; header_done=1; next } }
     /\| \(待填充\) \|/ { print rows; next }
-    /^- \(暂无数据\)$/ { matched_recent=1; print recent; next }
-    { if (!matched_recent) print }
-    END { if (matched_recent) print "" }
+    /^- \(暂无数据\)$/ { print recent; next }
+    { print }
     ' "$LEARNING_WIKI_DIR/knowledge-graph.md" > "$LEARNING_WIKI_DIR/knowledge-graph.md.tmp" 2>/dev/null || true
 
     # 如果 awk 成功，用临时文件替换
@@ -191,7 +199,7 @@ update_knowledge_graph() {
     fi
 
     # 更新 updated 字段
-    sed -i "s/updated:.*/updated: $today/" "$LEARNING_WIKI_DIR/knowledge-graph.md" 2>/dev/null || true
+    sed_inplace "s/updated:.*/updated: $today/" "$LEARNING_WIKI_DIR/knowledge-graph.md" 2>/dev/null || true
 
     log_info "已更新知识图谱"
 }
@@ -287,8 +295,8 @@ update_recommendations() {
             continue
         fi
 
-        # 更新 updated 字段
-        echo "$line" | sed "s/updated: {{DATE}}/updated: $today/" >> "$temp_file"
+        # 更新 updated 字段（匹配 {{DATE}} 或已有日期）
+        echo "$line" | sed -E "s/updated:.*/updated: $today/" >> "$temp_file"
     done < "$LEARNING_WIKI_DIR/recommendations.md"
 
     mv "$temp_file" "$LEARNING_WIKI_DIR/recommendations.md" 2>/dev/null || true

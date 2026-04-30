@@ -67,7 +67,7 @@ Wiki skills (编排层 — 知识复利引擎)
 
 ### Step 1: 初始化
 ```
-使用 Skill: superpowers:obsidian-wiki-init
+在目标项目中运行: TEMPLATE/scripts/install.sh (Unix) 或 TEMPLATE/scripts/install.bat (Windows)
 或: "创建一个新的研究知识库"
 ```
 
@@ -135,7 +135,7 @@ Wiki skills (编排层 — 知识复利引擎)
 ├── .obsidian/          # Obsidian 配置
 ├── archive/            # 归档目录
 │   ├── assets/         # 图片、音频、视频等素材
-│   └── sources/        # 源文件归档
+│   └── sources/        # 源文件归档（不可变）
 ├── raw/                # 临时待处理文件
 │   └── notes/          # 会话捕获笔记
 ├── scripts/            # 工具脚本
@@ -148,8 +148,8 @@ Wiki skills (编排层 — 知识复利引擎)
     ├── concepts/       # 核心概念
     ├── entities/       # 实体文档
     ├── guides/         # 使用指南
-    ├── sources/        # 来源摘要
     ├── synthesis/      # 综合分析（query 写回目标）
+    │   └── user-learning/  # 学习追踪（自动生成）
     ├── tips/           # 实用技巧
     └── tutorial/       # 教程
 ```
@@ -220,11 +220,12 @@ raw/ → [docs-ingest: 1:N] → wiki/ + archive/
 ## 安装到项目
 
 ```bash
-# Windows
-cd TEMPLATE/scripts && install.bat
-
+# 在目标项目目录中运行:
 # Unix/Linux/Mac
-cd TEMPLATE/scripts && chmod +x install.sh && ./install.sh
+/path/to/obsidian-wiki/TEMPLATE/scripts/install.sh
+
+# Windows
+\path\to\obsidian-wiki\TEMPLATE\scripts\install.bat
 ```
 
 ---

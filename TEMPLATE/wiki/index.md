@@ -2,6 +2,9 @@
 name: wiki-index
 description: Wiki 自动索引
 type: guide
+tags: [index, wiki]
+created: {{DATE}}
+updated: {{DATE}}
 status: stable
 confidence: high
 ---

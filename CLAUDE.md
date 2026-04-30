@@ -10,7 +10,8 @@ obsidian-wiki/
 ├── docs-ingest/           # Multi-page document ingestion
 ├── wiki-query/            # Wiki query with answer write-back
 ├── wiki-lint/             # Wiki health check (orphan, contradiction)
-├── inspool/               # Session knowledge capture (wiki-capture source)
+├── wiki-capture/          # Session knowledge capture
+├── learning-tracker/      # Learning activity tracking & analytics
 └── TEMPLATE/              # Installation template
     ├── wiki/              # Wiki structure
     │   ├── WIKI.md        # Schema spec
@@ -42,7 +43,8 @@ obsidian-wiki/
 | `docs-ingest` | 1:N multi-page synthesis ingestion |
 | `wiki-query` | Query wiki with answer write-back |
 | `wiki-lint` | Health check + orphan/contradiction detection |
-| `wiki-capture` | Session knowledge capture (source: inspool/) |
+| `wiki-capture` | Session knowledge capture |
+| `learning-tracker` | Learning activity tracking & analytics |
 
 ## Frontmatter Types
 
