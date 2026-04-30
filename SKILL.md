@@ -25,7 +25,7 @@ npm ls -g defuddle          # 网页提取
 
 | Skill | 用途 | 核心能力 |
 |-------|------|----------|
-| `obsidian-wiki/init` | 初始化 Wiki | 创建完整目录结构和配置 |
+| `obsidian-wiki` | 初始化 & 编排 | 创建目录结构、配置、skills 安装 |
 | `docs-ingest` | 多页综合摄取 | 1 源文件 → N 页面，矛盾检测 |
 | `wiki-query` | 知识复利查询 | Wiki-First + 答案写回 |
 | `wiki-lint` | 健康与演化检查 | 矛盾/孤立/缺口检测 |
