@@ -32,7 +32,7 @@ learning_path: next      # prev/next/core - 学习顺序标记
 
 ## 组件
 
-### 1. learning-tracker.sh
+### 1. tracker.sh
 
 用户学习活动追踪主脚本。
 
@@ -106,7 +106,7 @@ wiki-query 执行流程：
 1. **搜索** — 在 Wiki 中搜索相关页面
 2. **补充搜索** — 确保覆盖
 3. **读取** — 获取关键页面内容
-4. **追踪** — 调用 `learning-tracker.sh record` 记录主题
+4. **追踪** — 调用 `tracker.sh record` 记录主题
 5. **综合** — 整合答案
 6. **引用** — 标注来源
 7. **评估写回** — 判断是否写回
@@ -116,15 +116,15 @@ wiki-query 执行流程：
 
 通过 `install.sh` / `install.bat` 自动安装：
 
-1. 复制 `learning-tracker.sh` 和 `analyzer.sh`
-2. 首次运行 `learning-tracker.sh init` 时自动创建 `config/user-activity.json`
+1. 复制 `tracker.sh` 和 `analyzer.sh`
+2. 首次运行 `tracker.sh init` 时自动创建 `config/user-activity.json`
 
 ## 文件清单
 
 ```
 learning-tracker/
 ├── SKILL.md                    # 本文档
-├── learning-tracker.sh          # 追踪主脚本
+├── tracker.sh                  # 追踪主脚本
 ├── analyzer.sh                 # 分析器脚本
 └── config/
     └── user-activity.json.base # 数据模板

@@ -72,7 +72,7 @@ if not exist "%PROJECT_DIR%\.claude\skills\learning-tracker" mkdir "%PROJECT_DIR
 call :install_skill "%SKILL_ROOT%\learning-tracker\tracker.sh" "%PROJECT_DIR%\.claude\skills\learning-tracker\tracker.sh"
 call :install_skill "%SKILL_ROOT%\learning-tracker\analyzer.sh" "%PROJECT_DIR%\.claude\skills\learning-tracker\analyzer.sh"
 
-echo [安装] wiki-lint.sh...
+echo [安装] lint.sh...
 if not exist "%PROJECT_DIR%\scripts" mkdir "%PROJECT_DIR%\scripts"
 copy /Y "%SKILL_ROOT%\wiki-lint\lint.sh" "%PROJECT_DIR%\scripts\lint.sh" >nul 2>&1
 echo   OK lint.sh

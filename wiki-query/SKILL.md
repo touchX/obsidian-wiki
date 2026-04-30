@@ -50,13 +50,13 @@ learning_path: next  # prev/next/core - 学习顺序
 
 ```bash
 # 记录查询（自动调用）
-../learning-tracker/learning-tracker.sh record "topic-name" 3
+../learning-tracker/tracker.sh record "topic-name" 3
 
 # 会话结束分析
 ../learning-tracker/analyzer.sh analyze
 
 # 查看推荐
-../learning-tracker/learning-tracker.sh recommend
+../learning-tracker/tracker.sh recommend
 ```
 
 ## 执行步骤
@@ -64,7 +64,7 @@ learning_path: next  # prev/next/core - 学习顺序
 1. **搜索**: 在 Wiki 中搜索相关页面
 2. **补充搜索**: 用不同关键词再搜一次，确保覆盖
 3. **读取**: 获取关键页面详细内容
-4. **追踪**: 调用 `learning-tracker.sh record` 记录查询主题
+4. **追踪**: 调用 `tracker.sh record` 记录查询主题
 5. **综合**: 整合多个页面答案回答问题
 6. **引用**: 标注来源页面链接 `[[page-slug]]`
 7. **评估写回**: 判断答案是否值得写回 Wiki
@@ -164,7 +164,7 @@ confidence: high
 | 只用一个关键词 | 语义+关键词双重搜索 |
 | 不引用来源 | 标注 `[[page-slug]]` 链接 |
 | 好答案消失在对话中 | 评估写回，提议创建新页面 |
-| 不追踪学习行为 | 每次查询调用 learning-tracker.sh record |
+| 不追踪学习行为 | 每次查询调用 tracker.sh record |
 
 ## 智能推荐触发
 
@@ -179,7 +179,7 @@ confidence: high
 
 ### 推荐执行流程
 
-1. **检测**: 通过 learning-tracker.sh analyze 检测模式
+1. **检测**: 通过 tracker.sh analyze 检测模式
 2. **判断**: 根据频率、间隔、缺口综合判断
 3. **提议**: 用自然语言向用户提出建议
 4. **执行**: 用户确认后创建对应页面（concept/entity）

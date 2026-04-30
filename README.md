@@ -94,7 +94,7 @@ my-wiki/
 ├── archive/               # 源文件归档 (不可变)
 │   └── sources/
 ├── scripts/               # 工具脚本
-│   └── wiki-lint.sh      # 健康检查
+│   └── lint.sh           # 健康检查
 └── wiki/                  # Wiki 知识库
     ├── WIKI.md           # Schema 规范
     ├── wiki-index.base   # Bases 动态索引

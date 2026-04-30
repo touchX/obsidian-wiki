@@ -99,7 +99,7 @@ Wiki skills (编排层 — 知识复利引擎)
 ### Step 6: 学习追踪（可选，自动运行）
 ```
 使用 wiki-query 时自动追踪
-调用 learning-tracker.sh record 记录主题
+调用 tracker.sh record 记录主题
 会话结束调用 analyzer.sh analyze 生成推荐
 ```
 
@@ -140,7 +140,7 @@ Wiki skills (编排层 — 知识复利引擎)
 ├── raw/                # 临时待处理文件
 │   └── notes/          # 会话捕获笔记
 ├── scripts/            # 工具脚本
-│   └── wiki-lint.sh    # 健康检查
+│   └── lint.sh       # 健康检查
 └── wiki/               # Wiki 知识库
     ├── WIKI.md         # Schema 规范
     ├── wiki-index.base # Bases 动态索引视图

@@ -43,7 +43,7 @@ project-root/
 │   ├── assets/            # 图片、音频、视频等素材
 │   └── sources/           # 源文件归档（来自 raw/）
 └── scripts/               # 工具
-    └── wiki-lint.sh       # 健康检查
+    └── lint.sh            # 健康检查
 ```
 
 ## 核心原则
@@ -172,11 +172,11 @@ draft → stable → (challenged → stable | superseded)
 ### Lint（检查）
 
 ```bash
-cd wiki && ../scripts/wiki-lint.sh
+cd wiki && ../scripts/lint.sh
 ```
 
 ## 工具
 
-- `scripts/wiki-lint.sh` — Wiki 健康检查（含孤立页面、矛盾检测）
+- `scripts/lint.sh` — Wiki 健康检查（含孤立页面、矛盾检测）
 
 ---

@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Learning Tracker 智能学习进化系统**
-  - `learning-tracker.sh` — 用户学习活动追踪（主题频率、难度、连续天数）
+  - `tracker.sh` — 用户学习活动追踪（主题频率、难度、连续天数）
   - `analyzer.sh` — 学习分析器（生成推荐和报告）
   - 双轨数据结构：`config/user-activity.json` + Wiki frontmatter
   - 遗忘提醒：超过 7 天未访问的主题主动提醒
@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **代码健壮性**
   - `install.sh/bat` — 修复 skill 复制路径不一致问题
-  - `learning-tracker.sh` — 修复 total_queries 从未持久化的 bug
+  - `tracker.sh` — 修复 total_queries 从未持久化的 bug
   - `update_wiki_page_query` — 修复查找逻辑和目录列表不一致
   - `update_wiki_page_query` — 修复正则表达式误匹配问题
 

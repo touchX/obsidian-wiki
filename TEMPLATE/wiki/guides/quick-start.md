@@ -46,7 +46,7 @@ cp ~/documents/research-notes.md raw/
 定期运行健康检查：
 
 ```bash
-cd wiki && ../scripts/wiki-lint.sh
+cd wiki && ../scripts/lint.sh
 ```
 
 ## 下一步

@@ -18,7 +18,7 @@ obsidian-wiki/
     │   ├── wiki-index.base # Bases dynamic index
     │   └── ...
     ├── scripts/           # Tools
-    │   ├── wiki-lint.sh   # Health check script
+    │   ├── lint.sh           # Health check script
     │   ├── install.sh
     │   └── install.bat
     └── .obsidian/         # Obsidian config + plugins

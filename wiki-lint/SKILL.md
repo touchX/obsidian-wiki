@@ -30,7 +30,7 @@ description: Wiki 健康检查与知识演化技能。当用户要求检查 Wiki
 
 **使用 lint 脚本**:
 ```bash
-cd wiki && ../scripts/wiki-lint.sh
+cd wiki && ../scripts/lint.sh
 ```
 
 **矛盾检测**（LLM 辅助，脚本无法自动完成）:

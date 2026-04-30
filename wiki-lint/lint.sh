@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Wiki Lint Tool — 检查 Wiki 健康状况
-# 使用方法: cd wiki && ../scripts/wiki-lint.sh
-# 或从项目根目录: bash wiki-lint/wiki-lint.sh
+# 使用方法: cd wiki && ../scripts/lint.sh
+# 或从项目根目录: bash wiki-lint/lint.sh
 
 set -euo pipefail
 
@@ -250,7 +250,7 @@ echo "" >> "$REPORT_FILE"
 
 echo "## 建议" >> "$REPORT_FILE"
 echo "" >> "$REPORT_FILE"
-echo "- 定期运行 \`bash scripts/wiki-lint.sh\` 保持健康" >> "$REPORT_FILE"
+echo "- 定期运行 \`bash scripts/lint.sh\` 保持健康" >> "$REPORT_FILE"
 echo "- 新页面添加完整 frontmatter（name, description, type, tags, created, updated）" >> "$REPORT_FILE"
 echo "- 为孤立页面添加交叉引用链接到相关页面" >> "$REPORT_FILE"
 echo "- Source 字段指向 archive/ 中的实际文件" >> "$REPORT_FILE"

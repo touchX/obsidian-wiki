@@ -3,10 +3,10 @@
 # 用于记录用户的查询主题、频率、知识缺口，生成推荐
 #
 # 使用方法:
-#   learning-tracker.sh record <topic> [difficulty]    # 记录查询
-#   learning-tracker.sh analyze                        # 分析并生成推荐
-#   learning-tracker.sh recommend                      # 获取推荐
-#   learning-tracker.sh init                           # 初始化追踪文件
+#   tracker.sh record <topic> [difficulty]    # 记录查询
+#   tracker.sh analyze                        # 分析并生成推荐
+#   tracker.sh recommend                      # 获取推荐
+#   tracker.sh init                           # 初始化追踪文件
 
 set -euo pipefail
 
@@ -42,7 +42,7 @@ check_jq() {
     fi
 }
 
-# 初始化 learning tracker Wiki 目录结构（在 learning-tracker.sh 中调用）
+# 初始化 learning tracker Wiki 目录结构（在 tracker.sh 中调用）
 init_learning_structure_from_tracker() {
     local LEARNING_WIKI_DIR="${WIKI_DIR:-wiki}/synthesis/user-learning"
     mkdir -p "$LEARNING_WIKI_DIR"
@@ -497,14 +497,14 @@ main() {
             echo "Learning Tracker — 用户学习活动追踪"
             echo ""
             echo "使用方法:"
-            echo "  learning-tracker.sh init                  # 初始化追踪文件"
-            echo "  learning-tracker.sh record <topic> [难度]  # 记录查询事件"
-            echo "  learning-tracker.sh analyze                # 分析学习数据"
-            echo "  learning-tracker.sh recommend              # 获取推荐"
+            echo "  tracker.sh init                  # 初始化追踪文件"
+            echo "  tracker.sh record <topic> [难度]  # 记录查询事件"
+            echo "  tracker.sh analyze                # 分析学习数据"
+            echo "  tracker.sh recommend              # 获取推荐"
             echo ""
             echo "示例:"
-            echo "  learning-tracker.sh record javascript 3"
-            echo "  learning-tracker.sh analyze"
+            echo "  tracker.sh record javascript 3"
+            echo "  tracker.sh analyze"
             ;;
     esac
 }

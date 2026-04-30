@@ -77,12 +77,12 @@ mkdir -p "$PROJECT_DIR/.claude/skills/learning-tracker"
 install_skill "$SKILL_ROOT/learning-tracker/tracker.sh" "$PROJECT_DIR/.claude/skills/learning-tracker/tracker.sh"
 install_skill "$SKILL_ROOT/learning-tracker/analyzer.sh" "$PROJECT_DIR/.claude/skills/learning-tracker/analyzer.sh"
 
-echo "[安装] wiki-lint.sh..."
+echo "[安装] lint.sh..."
 if [ ! -d "$PROJECT_DIR/scripts" ]; then
     mkdir -p "$PROJECT_DIR/scripts"
 fi
 install_skill "$SKILL_ROOT/wiki-lint/lint.sh" "$PROJECT_DIR/scripts/lint.sh"
-chmod +x "$PROJECT_DIR/scripts/wiki-lint.sh"
+chmod +x "$PROJECT_DIR/scripts/lint.sh"
 
 echo ""
 echo "========================================="
