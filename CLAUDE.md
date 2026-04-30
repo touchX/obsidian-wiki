@@ -48,6 +48,7 @@ obsidian-wiki/
 
 | Skill | Purpose |
 |-------|---------|
+| `obsidian-wiki` | Initialization & orchestration |
 | `docs-ingest` | 1:N multi-page synthesis ingestion |
 | `wiki-query` | Query wiki with answer write-back |
 | `wiki-lint` | Health check + orphan/contradiction detection |

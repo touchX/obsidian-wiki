@@ -2,7 +2,10 @@
 name: wiki-schema
 description: Wiki 架构规范 — 目录结构、操作流程和约定
 type: guide
-version: 2.0
+tags: [wiki, schema, architecture]
+schema_version: 2.0
+created: {{DATE}}
+updated: {{DATE}}
 ---
 
 # Wiki Schema
