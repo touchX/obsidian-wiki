@@ -197,8 +197,8 @@ update_wiki_page_query() {
     for dir in concepts entities sources synthesis guides tips tutorial; do
         if [ -d "$WIKI_DIR/$dir" ]; then
             local found=$(find "$WIKI_DIR/$dir" -name "*.md" -type f 2>/dev/null | while read f; do
-                local name=$(grep "^name:" "$f" | head -1 | sed 's/name: *//' | tr -d ' ')
-                if [[ "$name" == *"$topic"* ]] || [[ "$f" == *"$topic"* ]]; then
+                # 使用 grep -F 精确匹配 name 字段值，避免正则表达式误匹配
+                if grep -qF "name: $topic" "$f" 2>/dev/null; then
                     echo "$f"
                     break
                 fi
