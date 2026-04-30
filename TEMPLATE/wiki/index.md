@@ -2,9 +2,11 @@
 name: wiki-index
 description: Wiki 自动索引
 type: guide
+status: stable
+confidence: high
 ---
 
-# {{WIKI_NAME}} Wiki
+# Obsidian Wiki
 
 > 创建时间: {{DATE}}
 
@@ -19,6 +21,7 @@ type: guide
 | [[guides/]] | 操作指南 |
 | [[tutorial/]] | 教程 |
 | [[tips/]] | 实用技巧 |
+| [[wiki-index.base]] | 自动索引（dataview） |
 
 ## 快速开始
 

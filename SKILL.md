@@ -1,106 +1,96 @@
 ---
 name: obsidian-wiki
-description: 独立的 Wiki 知识库系统 — 包含创建、摄取、查询、健康检查全套功能
-triggers:
-  - "创建 wiki"
-  - "创建知识库"
-  - "obsidian wiki"
-  - "初始化 wiki"
-  - "obsidian-wiki init"
-requirements:
-  - obsidian-cli (https://obsidian.md/cli)
-  - obsidian-skills (https://github.com/kepano/obsidian-skills)
+description: 独立的 Wiki 知识库系统 — 基于 Karpathy LLM Wiki 理论的多页综合知识引擎。支持创建、多页摄取、查询写回、矛盾检测、健康检查全流程。当用户提到 wiki、知识库、知识管理、笔记系统、文档归档、obsidian、文档体系化、整理文档、建立知识体系、知识复利时必须使用。即使用户只说"整理这些资料"或"建个知识库"，也应触发本技能。
 ---
 
 # Obsidian Wiki Skill
 
-基于 Claude Code Best Practice Wiki 方法论的一站式 Wiki 知识库系统。
+基于 Andrej Karpathy LLM Wiki 理论的一站式 Wiki 知识库系统。核心理念：**Wiki 是持久增长的复利资产**——每次摄取都让整个知识库更丰富，而非简单的文件翻译。
 
 ## 前置要求
 
-⚠️ **使用前必须安装以下依赖：**
-
-| 依赖 | 安装地址 | 说明 |
+| 依赖 | 安装方式 | 说明 |
 |------|----------|------|
-| obsidian-cli | https://obsidian.md/cli | Obsidian 命令行工具 |
-| obsidian-skills | https://github.com/kepano/obsidian-skills | Skills 插件集合 |
+| obsidian-cli | `npm i -g @obsidianmd/obsidian-utilities-cli` | 页面读写、搜索、daily note |
+| obsidian-skills | [GitHub](https://github.com/kepano/obsidian-skills) | CLI + Markdown + Bases + Canvas + Defuddle |
 
-### 检查安装状态
+### 验证安装
 
 ```bash
-# 检查 obsidian-cli
-obsidian --version
-
-# 检查 obsidian-skills
-ls ~/.obsidian/plugins/obsidian-skills/
-```
-
-### 未安装提示
-
-如果用户未安装依赖，显示：
-
-```
-⚠️ obsidian-wiki 需要以下前置依赖：
-
-1. obsidian-cli
-   安装: https://obsidian.md/cli
-   npm install -g @obsidianmd/obsidian-utilities-cli
-
-2. obsidian-skills
-   安装: https://github.com/kepano/obsidian-skills
-   Obsidian 设置 → 社区插件 → 搜索 "obsidian-skills"
-
-请安装后重新运行本技能。
+obsidian --version          # CLI 工具
+npm ls -g defuddle          # 网页提取
 ```
 
 ## 组件概览
 
-| Skill | 用途 | 触发时机 |
+| Skill | 用途 | 核心能力 |
 |-------|------|----------|
-| `obsidian-wiki/init` | 初始化新 Wiki | 需要创建知识库时 |
-| `inspool` | 会话知识沉淀 | 完成复杂解答、发现新模式、会话结束时 |
+| `obsidian-wiki/init` | 初始化 Wiki | 创建完整目录结构和配置 |
+| `docs-ingest` | 多页综合摄取 | 1 源文件 → N 页面，矛盾检测 |
+| `wiki-query` | 知识复利查询 | Wiki-First + 答案写回 |
+| `wiki-lint` | 健康与演化检查 | 矛盾/孤立/缺口检测 |
+| `wiki-capture` | 会话知识捕获 | 高价值内容沉淀 |
+
+## 渐进式复杂度
+
+Karpathy："everything is optional and modular — pick what's useful, ignore what isn't."
+
+| 级别 | 功能 | 适合场景 |
+|------|------|----------|
+| **L1** | raw→wiki→archive 基础流程 | 个人笔记、读书笔记 |
+| **L2** | + 跨页综合、矛盾检测、query 写回 | 研究项目、深度学习 |
+| **L3** | + Bases 视图、Canvas 知识图、defuddle 网页摄取 | 专业知识库 |
+| **L4** | + 多 Vault、团队协作、搜索引擎(qmd) | 团队 Wiki |
+
+默认启用 L1-L2，L3-L4 按需激活。
 
 ## 分层架构
 
 ```
-obsidian-skills (底层)
-├── obsidian-cli        → 页面读写、搜索
-├── obsidian-markdown   → frontmatter 规范
-└── defuddle            → 网页内容提取
+obsidian-skills (底层 — 组合使用，不重写)
+├── obsidian-cli        → 页面读写、搜索、daily notes
+├── obsidian-markdown   → OFM 规范（callouts, embeds, wikilinks）
+├── obsidian-bases      → .base 动态视图
+├── json-canvas         → .canvas 知识图
+└── defuddle            → 网页→markdown 提取
         ↓
-Wiki skills (编排层)
-├── obsidian-wiki/init  → 初始化创建
-├── docs-ingest          → 摄取流程
-├── wiki-query           → 查询回答
-├── wiki-lint           → 健康检查
-└── inspool             → 知识沉淀
+Wiki skills (编排层 — 知识复利引擎)
+├── docs-ingest         → 1:N 多页综合摄取
+├── wiki-query          → 查询 + 答案写回
+├── wiki-lint           → 健康检查 + 知识演化
+└── wiki-capture        → 会话知识捕获
 ```
 
 ## 使用流程
 
-### Step 1: 初始化 Wiki
-
+### Step 1: 初始化
 ```
 使用 Skill: superpowers:obsidian-wiki-init
-或直接说: "创建一个新的研究知识库"
+或: "创建一个新的研究知识库"
 ```
 
-### Step 2: 添加知识
-
+### Step 2: 摄取知识（1:N 多页综合）
 ```
-使用 docs-ingest skill 摄取文档
-```
-
-### Step 3: 查询知识
-
-```
-使用 wiki-query skill 搜索答案
+使用 docs-ingest skill
+支持: 文件(raw/)、URL(defuddle 提取)、批量
 ```
 
-### Step 4: 健康检查
-
+### Step 3: 查询知识（答案可写回）
 ```
-使用 wiki-lint skill 检查状况
+使用 wiki-query skill
+优质答案自动提议写回为新的 synthesis 页面
+```
+
+### Step 4: 健康检查（含矛盾检测）
+```
+使用 wiki-lint skill
+检查: frontmatter + 链接 + 矛盾 + 孤立页 + 知识缺口
+```
+
+### Step 5: 会话捕获
+```
+使用 wiki-capture skill
+会话结束前捕获高价值内容
 ```
 
 ## 目录结构
@@ -110,60 +100,24 @@ Wiki skills (编排层)
 ├── .obsidian/          # Obsidian 配置
 ├── archive/            # 归档目录
 │   ├── assets/         # 图片、音频、视频等素材
-│   └── sources/        # 源文件归档（来自 raw/）
-├── docs/               # 文档目录
-├── raw/                 # 临时待处理文件
-├── scripts/             # 工具脚本
+│   └── sources/        # 源文件归档
+├── raw/                # 临时待处理文件
+│   └── notes/          # 会话捕获笔记
+├── scripts/            # 工具脚本
 │   └── wiki-lint.sh    # 健康检查
 └── wiki/               # Wiki 知识库
     ├── WIKI.md         # Schema 规范
-    ├── index.md        # Wiki 索引
-    ├── log.md          # 操作日志
+    ├── wiki-index.base # Bases 动态索引视图
+    ├── index.md        # 手动/Wiki 索引
+    ├── log.md          # 操作日志（append-only）
     ├── concepts/       # 核心概念
     ├── entities/       # 实体文档
     ├── guides/         # 使用指南
     ├── sources/        # 来源摘要
-    ├── synthesis/      # 综合分析
+    ├── synthesis/      # 综合分析（query 写回目标）
     ├── tips/           # 实用技巧
     └── tutorial/       # 教程
 ```
-
-## 预配置插件
-
-TEMPLATE 包含以下预配置插件（自动安装到 `.obsidian/plugins/`）：
-
-| 插件 | 用途 | 说明 |
-|------|------|------|
-| **dataview** | 数据查询和索引 | 自动维护 wiki/index.md，支持页面元数据查询 |
-| **calendar** | 日历视图 | 按日期浏览和创建笔记，常用于 log.md 操作日志 |
-| **claudian** | Claude Code 集成 | 与 Claude CLI 交互，支持 AI 辅助编辑 |
-| **obsidian-branding** | 界面美化 | 统一 Vault 视觉风格，自定义主题 |
-| **omnisearch** | 统一搜索 | 集成本地搜索、图片 OCR 搜索、音视频搜索 |
-| **obsidian-excalidraw-plugin** | Excalidraw 集成 | 在 Obsidian 中使用 Excalidraw 画布 |
-| **templater-obsidian** | 模板引擎 | 高级模板系统，支持动态内容和脚本 |
-| **tag-wrangler** | 标签管理 | 批量重命名、合并、折叠标签 |
-| **file-explorer-note-count** | 目录计数 | 在文件浏览器中显示每个文件夹的笔记数量 |
-| **obsidian-custom-attachment-location** | 附件管理 | 自定义附件存储位置 |
-| **obsidian-local-rest-api** | REST API | 本地 HTTP API，支持外部工具集成 |
-| **recent-files-obsidian** | 最近文件 | 显示最近打开的文件列表 |
-
-### Dataview 查询示例
-
-```dataview
-TABLE without id
-  link(file.link, title) as "页面",
-  type as "类型",
-  tags as "标签"
-FROM "wiki"
-WHERE file.cday = date(today)
-SORT file.cday desc
-```
-
-### Calendar 配置
-
-- **默认目录**: `wiki/`
-- **日期格式**: `YYYY-MM-DD`
-- **模板**: `templates/daily.md`
 
 ## Frontmatter 标准
 
@@ -176,6 +130,8 @@ tags: [tag1, tag2]
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 source: ../../archive/sources/filename.md
+status: draft | stable | challenged | superseded
+confidence: low | medium | high
 ---
 ```
 
@@ -188,41 +144,40 @@ source: ../../archive/sources/filename.md
 | `created` | ✅ | 创建日期 |
 | `updated` | ✅ | 更新日期 |
 | `source` | 建议 | 原始文件路径 |
+| `status` | 建议 | 知识状态（默认 `draft`） |
+| `confidence` | 建议 | 置信度（默认 `medium`） |
 
-### type 可选值
+### Status 生命周期
 
-| 值 | 用途 |
-|------|------|
-| `concept` | 核心概念定义 |
-| `entity` | 实体文档记录 |
-| `source` | 来源摘要 |
-| `synthesis` | 综合分析 |
-| `guide` | 使用指南 |
-| `tutorial` | 教程 |
-| `tips` | 实用技巧 |
+```
+draft → stable → (challenged → stable | superseded)
+```
 
 ## 三层架构
 
 ```
-raw/ → [ingest] → wiki/ + archive/
+raw/ → [docs-ingest: 1:N] → wiki/ + archive/
 ```
 
 | 阶段 | 目录 | 说明 |
 |------|------|------|
 | 摄入前 | `raw/` | 临时存放待处理源文件 |
-| 处理中 | `wiki/` | Wiki 知识库 |
-| 处理后 | `archive/` | 源文件归档 |
+| 处理中 | `wiki/` | Wiki 知识库（LLM 拥有） |
+| 处理后 | `archive/` | 源文件归档（不可变） |
 
-## 相关 Skills
+## 执行指令
 
-- `superpowers:docs-ingest` — 文档摄取流程
-- `superpowers:wiki-query` — Wiki 查询
-- `superpowers:wiki-lint` — Wiki 健康检查
-- `superpowers:inspool` — 会话知识沉淀
+### 当用户请求初始化 Wiki
+
+1. 提取目标路径
+2. 验证路径
+3. 复制 TEMPLATE/ 到目标
+4. 替换模板占位符（`{{WIKI_NAME}}`, `{{DATE}}`）
+5. 创建必需目录（raw/, archive/, raw/notes/）
+6. 复制 skills 到 `.claude/skills/`
+7. 显示完成信息
 
 ## 安装到项目
-
-将 skills 安装到目标项目的 `.claude/skills/` 目录：
 
 ```bash
 # Windows
@@ -232,105 +187,6 @@ cd TEMPLATE/scripts && install.bat
 cd TEMPLATE/scripts && chmod +x install.sh && ./install.sh
 ```
 
-安装后，在新项目中直接说 "使用 obsidian-wiki" 即可激活全套 Wiki 功能。
-
 ---
 
-## 执行指令
-
-### 当用户请求初始化 Wiki
-
-**检测模式：**
-- 用户说："初始化 wiki"、"创建知识库"、"obsidian-wiki init <path>"
-- 触发关键词：init、初始化、创建
-
-**执行步骤：**
-
-1. **提取目标路径**
-   - 从用户输入中提取目标路径（如 "obsidian-wiki init my-wiki" → "my-wiki"）
-   - 如果未提供路径，询问用户："请提供目标路径（如：obsidian-wiki init my-wiki）"
-
-2. **验证路径**
-   ```bash
-   # 检查路径是否存在
-   if [ -d "{target-path}" ]; then
-       echo "⚠️ 警告：目标路径已存在"
-       echo "是否覆盖？(y/n)"
-       # 等待用户确认
-   fi
-   ```
-
-3. **复制模板文件**
-   ```bash
-   cp -r TEMPLATE/* {target-path}/
-   ```
-   
-   这会复制：
-   - `wiki/` — Wiki 知识库结构
-   - `scripts/` — 工具脚本
-   - `.obsidian/` — Obsidian 配置（包含预配置插件）
-     - `plugins/calendar/` — 日历视图
-     - `plugins/claudian/` — Claude Code 集成
-     - `plugins/dataview/` — 数据查询和索引
-     - `plugins/obsidian-branding/` — 界面美化
-     - `plugins/file-explorer-note-count/` — 目录计数
-     - `plugins/obsidian-local-rest-api/` — REST API
-     - `plugins/omnisearch/` — 统一搜索
-     - `plugins/obsidian-custom-attachment-location/` — 附件管理
-     - `plugins/tag-wrangler/` — 标签管理
-     - `plugins/templater-obsidian/` — 模板引擎
-     - `plugins/recent-files-obsidian/` — 最近文件
-     - `plugins/obsidian-excalidraw-plugin/` — Excalidraw 集成
-
-4. **创建必需目录**
-   ```bash
-   # 创建三层架构必需目录
-   mkdir -p {target-path}/raw
-   mkdir -p {target-path}/archive/assets
-   mkdir -p {target-path}/archive/sources
-   ```
-
-5. **创建并安装 skills**
-   ```bash
-   # 创建 skills 目录
-   mkdir -p {target-path}/.claude/skills
-   
-   # 复制主 skill
-   cp SKILL.md {target-path}/.claude/skills/obsidian-wiki.md
-   
-   # 复制子 skills
-   mkdir -p {target-path}/.claude/skills/docs-ingest
-   cp docs-ingest/SKILL.md {target-path}/.claude/skills/docs-ingest/SKILL.md
-   
-   mkdir -p {target-path}/.claude/skills/wiki-query
-   cp wiki-query/SKILL.md {target-path}/.claude/skills/wiki-query/SKILL.md
-   
-   mkdir -p {target-path}/.claude/skills/wiki-lint
-   cp wiki-lint/SKILL.md {target-path}/.claude/skills/wiki-lint/SKILL.md
-   
-   mkdir -p {target-path}/.claude/skills/inspool
-   cp inspool/SKILL.md {target-path}/.claude/skills/inspool/SKILL.md
-   ```
-
-6. **显示完成信息**
-   ```
-   ✅ Wiki 初始化完成！
-   
-   已创建：
-     - {target-path}/wiki/              - Wiki 知识库
-     - {target-path}/raw/               - 待处理源文件目录
-     - {target-path}/archive/           - 归档目录
-     - {target-path}/archive/assets/    - 多媒体素材（图片/音频/视频）
-     - {target-path}/archive/sources/   - 源文件归档
-     - {target-path}/scripts/           - 工具脚本
-     - {target-path}/.claude/skills/   - 项目 skills
-   
-   下一步：
-     1. 重启 Claude Code
-     2. 在新项目中说 "使用 obsidian-wiki"
-     3. 开始添加知识
-   ```
-
----
-
-*基于 Claude Code Best Practice 构建*
+*基于 Andrej Karpathy LLM Wiki 理论构建*

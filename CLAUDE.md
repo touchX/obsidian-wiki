@@ -1,19 +1,25 @@
 # CLAUDE.md — obsidian-wiki Skill
 
-Independent Wiki knowledge base system based on Claude Code Best Practice Wiki methodology.
+Independent Wiki knowledge base system based on Karpathy LLM Wiki theory.
 
 ## Project Structure
 
 ```
 obsidian-wiki/
 ├── SKILL.md              # Main skill entry
-├── docs-ingest/           # Document ingestion
-├── wiki-query/            # Wiki query
-├── wiki-lint/             # Wiki health check
-├── inspool/               # Session knowledge capture
+├── docs-ingest/           # Multi-page document ingestion
+├── wiki-query/            # Wiki query with answer write-back
+├── wiki-lint/             # Wiki health check (orphan, contradiction)
+├── inspool/               # Session knowledge capture (wiki-capture source)
 └── TEMPLATE/              # Installation template
     ├── wiki/              # Wiki structure
+    │   ├── WIKI.md        # Schema spec
+    │   ├── wiki-index.base # Bases dynamic index
+    │   └── ...
     ├── scripts/           # Tools
+    │   ├── wiki-lint.sh   # Health check script
+    │   ├── install.sh
+    │   └── install.bat
     └── .obsidian/         # Obsidian config + plugins
 ```
 
@@ -29,12 +35,21 @@ obsidian-wiki/
 3. Run install.bat/install.sh
 4. Use skills via Claude Code
 
-## Commands
+## Skills
 
-- `docs-ingest` — Ingest documents into wiki
-- `wiki-query` — Query wiki knowledge
-- `wiki-lint` — Check wiki health
+| Skill | Purpose |
+|-------|---------|
+| `docs-ingest` | 1:N multi-page synthesis ingestion |
+| `wiki-query` | Query wiki with answer write-back |
+| `wiki-lint` | Health check + orphan/contradiction detection |
+| `wiki-capture` | Session knowledge capture (source: inspool/) |
 
 ## Frontmatter Types
 
 - concept, entity, source, synthesis, guide, tutorial, tips
+
+## Status Lifecycle
+
+```
+draft → stable → (challenged → stable | superseded)
+```

@@ -1,85 +1,40 @@
 ---
-name: inspool
-description: Use when capturing high-value conversation insights for future Wiki integration and knowledge沉淀
+name: wiki-capture
+description: 会话知识捕获技能（原 inspool）。当完成复杂解答、发现新模式、积累实用技巧、会话即将结束时，将高价值内容捕获到 raw/notes/ 供后续摄取。用户说"记录一下"、"保存经验"、"沉淀知识"、"capture"时也应触发。
 ---
 
-# Inspool Skill
+# 会话知识捕获技能
 
-## Overview
-会话知识沉淀技能：将高价值回答、阶段性结果、经验教训总结到 raw/notes/ 目录
+将高价值回答、阶段性结果、经验教训捕获到 `raw/notes/`，供 docs-ingest 多页综合摄取。
 
-## Layered Architecture
+## 触发条件
 
-```
-obsidian-skills (底层)  →  Wiki skills (编排层)
-├── obsidian-cli        →  inspool 使用 create
-├── obsidian-markdown   →  格式规范
-└── obsidian-bases      →  可选：知识库视图
-```
-
-## When to Use
-
-**触发条件：**
 - 完成复杂问题解答
-- 发现新的 Claude Code 使用模式
-- 积累实用技巧或经验
+- 发现新的通用模式
+- 积累实用技巧或经验教训
 - 会话结束前的知识沉淀
+- 用户主动要求记录
 
-**症状：**
-- 重要发现未记录
-- 重复解决问题
-- 知识随会话消失
+## 是否应该捕获？
 
-## Core Pattern
+| 判断条件 | 决策 |
+|----------|------|
+| 解决方案复杂度 > 5 分钟 | 捕获 |
+| 发现通用模式 | 捕获 |
+| 错误教训值得分享 | 捕获 |
+| 综合了多个 Wiki 页面 | 捕获 |
+| 纯执行无新知 | 不捕获 |
+| 已知信息确认 | 不捕获 |
 
-```dot
-digraph inspool {
-  "识别高价值内容" -> "分析提炼关键点"
-  "分析提炼" -> "obsidian create 写入"
-  "写入" -> "raw/notes/YYYY-MM-DD-NOTE.md"
-  "obsidian create" -> "添加标签"
-  "添加标签" -> "后续 Ingest 准备"
-}
-```
+## 执行步骤
 
-## Real Commands
+1. **识别**: 从对话中识别高价值内容
+2. **提炼**: 提取关键信息，去除噪音
+3. **关联**: 检查 `[[已有 Wiki 页面]]` 避免重复
+4. **写入**: 创建笔记到 `raw/notes/YYYY-MM-DD-{topic}.md`
+5. **提议摄取**: 如果笔记足够丰富，提议立即运行 docs-ingest
 
-使用 `obsidian` CLI (需 Obsidian 运行中):
-
-```bash
-# 创建会话笔记
-obsidian create name="notes/2024-01-15-claude-config" content="..." silent
-
-# 追加内容到现有笔记
-obsidian append file="notes/2024-01-15-claude-config" content="\n\n## 新发现"
-
-# 读取笔记检查
-obsidian read file="notes/2024-01-15-claude-config"
-```
-
-### create 命令参数
-
-```bash
-obsidian create name="Note Name" content="Content" silent overwrite
-```
-
-| 参数 | 说明 |
-|------|------|
-| `name` | 笔记名称 |
-| `content` | 笔记内容（使用 `\n` 换行） |
-| `silent` | 不自动打开文件 |
-| `overwrite` | 覆盖已存在文件 |
-
-## Quick Reference
-
-| 阶段 | 操作 | 命令 |
-|------|------|------|
-| Identify | 分析对话 | 识别高价值内容 |
-| Extract | 提炼要点 | 提取关键信息 |
-| Write | 创建笔记 | `obsidian create name="..." content="..." silent` |
-| Tag | 添加 frontmatter | 标记类型和来源 |
-
-## Note 模板
+## 笔记模板
 
 ```markdown
 ---
@@ -89,6 +44,8 @@ type: insight | pattern | tip | lesson
 tags: [session, {relevant-tags}]
 created: {date}
 source: conversation
+related:
+  - "[[existing-wiki-page]]"
 ---
 
 # {Topic}
@@ -104,41 +61,32 @@ source: conversation
 {何时使用}
 
 ## 相关 Wiki 页面
-- [[existing-page]]（如果已有）
+- [[existing-page]]
 ```
 
-## When to Use - Decision Tree
+## 与 Daily Note 集成
 
-```
-应该 inspool?
-├── 解决方案复杂度 > 5 分钟? → 是 → ✅ 记录
-├── 发现通用模式? → 是 → ✅ 记录
-├── 错误教训值得分享? → 是 → ✅ 记录
-├── 纯执行无新知? → 否 → 不记录
-├── 已知信息确认? → 否 → 不记录
+如果项目启用了 Obsidian daily notes：
+
+```bash
+# 追加摘要到当日笔记
+obsidian daily:append content="- 📝 捕获: [[notes/topic]] — 一句话描述"
 ```
 
-## Common Mistakes
-
-| 错误 | 正确做法 |
-|------|----------|
-| 会话结束不沉淀 | 会话结束前运行 inspool |
-| 记录太笼统 | 具体：问题→解决→结果 |
-| 不标记类型 | 用 type 字段区分类型 |
-| 不关联已有 Wiki | 检查 [[links]] 避免重复 |
-
-## Types
+## 笔记类型
 
 | Type | 用途 | 特点 |
 |------|------|------|
-| insight | 新发现 | 突破性认知 |
-| pattern | 通用模式 | 可复用方法 |
-| tip | 实用技巧 | 小而美 |
-| lesson | 经验教训 | 失败教训 |
+| `insight` | 新发现 | 突破性认知 |
+| `pattern` | 通用模式 | 可复用方法 |
+| `tip` | 实用技巧 | 小而美 |
+| `lesson` | 经验教训 | 失败教训 |
 
-## Real-World Impact
+## 常见错误
 
-- 知识不再随会话消失
-- 为 Wiki 持续供源
-- 经验可复用
-- 团队知识共享
+| 错误 | 正确做法 |
+|------|----------|
+| 会话结束不捕获 | 会话结束前主动运行 wiki-capture |
+| 记录太笼统 | 具体：问题→解决→结果 |
+| 不关联已有 Wiki | 检查 `[[links]]` 避免重复 |
+| 捕获后不摄取 | 对丰富笔记提议运行 docs-ingest |

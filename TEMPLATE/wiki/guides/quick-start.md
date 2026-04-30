@@ -5,6 +5,8 @@ type: guide
 tags: [guide, beginner, tutorial]
 created: 2026-04-26
 updated: 2026-04-26
+status: stable
+confidence: high
 source: ../../archive/sources/quick-start.md
 ---
 

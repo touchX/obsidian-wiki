@@ -46,19 +46,23 @@ install_skill() {
 
 echo "[安装] obsidian-wiki skill..."
 mkdir -p "$PROJECT_DIR/.claude/skills"
-install_skill "../SKILL.md" "$PROJECT_DIR/.claude/skills/obsidian-wiki.md"
+install_skill "SKILL.md" "$PROJECT_DIR/.claude/skills/obsidian-wiki.md"
 
 echo "[安装] docs-ingest skill..."
-install_skill "../docs-ingest/SKILL.md" "$PROJECT_DIR/.claude/skills/docs-ingest/SKILL.md"
+mkdir -p "$PROJECT_DIR/.claude/skills/docs-ingest"
+install_skill "docs-ingest/SKILL.md" "$PROJECT_DIR/.claude/skills/docs-ingest/SKILL.md"
 
 echo "[安装] wiki-query skill..."
-install_skill "../wiki-query/SKILL.md" "$PROJECT_DIR/.claude/skills/wiki-query/SKILL.md"
+mkdir -p "$PROJECT_DIR/.claude/skills/wiki-query"
+install_skill "wiki-query/SKILL.md" "$PROJECT_DIR/.claude/skills/wiki-query/SKILL.md"
 
 echo "[安装] wiki-lint skill..."
-install_skill "../wiki-lint/SKILL.md" "$PROJECT_DIR/.claude/skills/wiki-lint/SKILL.md"
+mkdir -p "$PROJECT_DIR/.claude/skills/wiki-lint"
+install_skill "wiki-lint/SKILL.md" "$PROJECT_DIR/.claude/skills/wiki-lint/SKILL.md"
 
-echo "[安装] inspool skill..."
-install_skill "../inspool/SKILL.md" "$PROJECT_DIR/.claude/skills/inspool/SKILL.md"
+echo "[安装] wiki-capture skill..."
+mkdir -p "$PROJECT_DIR/.claude/skills/wiki-capture"
+install_skill "inspool/SKILL.md" "$PROJECT_DIR/.claude/skills/wiki-capture/SKILL.md"
 
 echo ""
 echo "========================================="
@@ -70,7 +74,7 @@ echo "    - obsidian-wiki"
 echo "    - docs-ingest"
 echo "    - wiki-query"
 echo "    - wiki-lint"
-echo "    - inspool"
+echo "    - wiki-capture (原 inspool)"
 echo ""
 echo "  使用方法:"
 echo "    1. 重启 Claude Code"
