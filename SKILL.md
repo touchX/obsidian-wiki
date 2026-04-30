@@ -27,7 +27,7 @@ npm ls -g defuddle          # 网页提取
 | Skill | 用途 | 核心能力 |
 |-------|------|----------|
 | `obsidian-wiki` | 初始化 & 编排 | 创建目录结构、配置、skills 安装 |
-| `docs-ingest` | 多页综合摄取 | 1 源文件 → N 页面，矛盾检测 |
+| `docs-ingest` | 多格式文档摄入 | MIME 检测、格式转换、Skill 路由、1:N 综合摄取 |
 | `wiki-query` | 知识复利查询 | Wiki-First + 答案写回 |
 | `wiki-lint` | 健康与演化检查 | 矛盾/孤立/缺口检测 |
 | `wiki-capture` | 会话知识捕获 | 高价值内容沉淀 |
@@ -75,7 +75,8 @@ Wiki skills (编排层 — 知识复利引擎)
 ### Step 2: 摄取知识（1:N 多页综合）
 ```
 使用 docs-ingest skill
-支持: 文件(raw/)、URL(defuddle 提取)、批量
+支持格式: PDF、Word、Excel、Markdown、网页、纯文本
+来源: 文件(raw/)、URL(defuddle 提取)、批量处理
 ```
 
 ### Step 3: 查询知识（答案可写回）
@@ -164,6 +165,7 @@ tags: [tag1, tag2]
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 source: ../../archive/sources/filename.md
+format: docx | pdf | xlsx | markdown | html | text
 status: draft | stable | challenged | superseded
 confidence: low | medium | high
 # --- 智能进化字段（可选） ---
@@ -183,6 +185,7 @@ learning_path: next       # prev/next/core，学习顺序
 | `created` | ✅ | 创建日期 |
 | `updated` | ✅ | 更新日期 |
 | `source` | 建议 | 原始文件路径 |
+| `format` | 建议 | 原始文件格式（docx/pdf/xlsx/markdown/html/text） |
 | `status` | 建议 | 知识状态（默认 `draft`） |
 | `confidence` | 建议 | 置信度（默认 `medium`） |
 
