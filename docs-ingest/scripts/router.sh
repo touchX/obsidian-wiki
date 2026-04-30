@@ -67,13 +67,17 @@ check_skill_available() {
     fi
 
     # 其他 skill 检查 SKILL.md 是否存在
-    # 路径: docs-ingest/scripts/router.sh → docs-ingest/${skill}/SKILL.md
-    local skill_path="../${skill}/SKILL.md"
+    # 路径: docs-ingest/scripts/router.sh → TEMPLATE/.claude/skills/${skill}/SKILL.md
+    local skill_path="../../TEMPLATE/.claude/skills/${skill}/SKILL.md"
     if [[ -f "$skill_path" ]]; then
         return 0
-    else
-        return 1
     fi
+    # 降级路径: docs-ingest/${skill}/SKILL.md (向后兼容)
+    skill_path="../${skill}/SKILL.md"
+    if [[ -f "$skill_path" ]]; then
+        return 0
+    fi
+    return 1
 }
 
 # 路由文件到对应的 Skill
